@@ -9,6 +9,8 @@ LARGURA_GRADE = 300
 ALTURA_GRADE = 600
 TOPO_X = (LARGURA/2)-(LARGURA_GRADE/2)
 TOPO_Y = 50
+COLISAO_Y = [[] for _ in range(21)]
+COLISAO_Y[0].append(620)
 
 for diretorios,subpastas,arquivos in os.walk("fontes"):
     FONTES = arquivos
@@ -91,6 +93,15 @@ def Movimentacao(bloquinho, sentido):
                 posicao = list(bloquinho[i][j])
                 final[i].append((posicao[0]-30,posicao[1]))
         for i in range(0,len(final)):
+            final[i].append(bloquinho[i][-1])
+        return final
+    elif sentido == "cima":
+        for i in range(len(bloquinho)):
+            final.append([])
+            for j in range(len(bloquinho[i]) - 1):
+                posicao = list(bloquinho[i][j])
+                final[i].append((posicao[0], posicao[1] - 30))
+        for i in range(0, len(final)):
             final[i].append(bloquinho[i][-1])
         return final
 
