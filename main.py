@@ -9,10 +9,8 @@ LARGURA_GRADE = 300
 ALTURA_GRADE = 600
 TOPO_X = (LARGURA/2)-(LARGURA_GRADE/2)
 TOPO_Y = 50
-COLISAO_Y = [[] for _ in range(21)]
-COLISAO_Y[0].append(620)
 
-for diretorios,subpastas,arquivos in os.walk("fontes"):
+for diretorios,subpastas,arquivos in os.walk("fontes_uuiii"):
     FONTES = arquivos
 
 pygame.font.init()
@@ -53,7 +51,7 @@ def Bloquinhos(x,y):
 def Titulo(fontes):
     cor = (random.randint(0,255), random.randint(0,255), random.randint(0,255))
     fonte = random.choice(fontes)
-    titulo = pygame.font.Font("fontes/{}".format(fonte), 50)
+    titulo = pygame.font.Font("fontes_uuiii/{}".format(fonte),50)
     titulo2 = titulo.render("Tetrinho", 1, (cor))
     return titulo2
 
@@ -63,6 +61,19 @@ def Mapa(tela, x, y, largura, altura):
     for i in range(20):
         pygame.draw.line(tela, (128,128,128), (x,y+(i*30)), (x+300,y+(i*30)))
     pygame.draw.rect(tela, (72,61,139), (x,y, largura, altura), 3)
+def Vacuos(x,y):
+    espacinhos = [[] for _ in range(0,21)]
+    for i in range(10):
+        espacinhos[0].append((x+i*30 ,y-30,(0,0,0)))
+    for i in range(10):
+        espacinhos[0].append((x+i*30,y+30*20,(0,0,0)))
+    for i in range(20):
+        espacinhos[0].append((x-30,y+i*30,(0,0,0)))
+    for i in range(20):
+        espacinhos[0].append((x+30*10,y+i*30,(0,0,0)))
+    return espacinhos
+
+
 
 def Movimentacao(bloquinho, sentido):
     final = []
@@ -104,15 +115,33 @@ def Movimentacao(bloquinho, sentido):
         for i in range(0, len(final)):
             final[i].append(bloquinho[i][-1])
         return final
+    else:
+        return bloquinho
+def Checar_Movimentos(index,bloquinho,espacinhos,sentido):
+    sentidos = ["esquerda","direita","baixo","cima"]
+    if sentido == "espaco":
+        for sentido in sentidos:
+            passo_falso = Movimentacao(bloquinho, sentido)
+            for i in range(len(espacinhos)):
+                for j in range(len(espacinhos[i])):
+                    for i2 in range(len(passo_falso[index]) - 1):
+                        if passo_falso[index][i2][0] == espacinhos[i][j][0] and passo_falso[index][i2][1] == espacinhos[i][j][1]:
+                            if sentido == "esquerda":
+                                return "direita"
+                            elif sentido == "direita":
+                                return "esquerda"
+                            elif  sentido == "cima":
+                                return "baixo"
+                            elif sentido == "baixo":
+                                return "cima"
 
-def Checar_Movimento_Lateral(index,bloquinho):
-    while True:
-        if bloquinho[index][0][0] < 300:
-            bloquinho = Movimentacao(bloquinho, "direita")
-        elif bloquinho[index][3][0] > 570:
-            bloquinho = Movimentacao(bloquinho, "esquerda")
-        else:
-            return bloquinho
+    else:
+        passo_falso = Movimentacao(bloquinho, sentido)
+        for i in range(len(espacinhos)):
+            for j in range(len(espacinhos[i])):
+                for i2 in range(len(passo_falso[index])-1):
+                    if passo_falso[index][i2][0] == espacinhos[i][j][0] and passo_falso[index][i2][1] == espacinhos[i][j][1]:
+                        return True
 
 def Main(tela):
     global FONTES
@@ -123,11 +152,13 @@ def Main(tela):
     global TOPO_X
     global TOPO_Y
 
+
     index = 0
     tamanho = 30
     contador_segundos = 0
     rodando = True
     titulo = Titulo(FONTES)
+    espacinhos = Vacuos(TOPO_X,TOPO_Y)
     bloquinho = Bloquinhos(TOPO_X+120,TOPO_Y)
     while rodando:
         clock.tick(30)
@@ -137,29 +168,50 @@ def Main(tela):
                 return rodando
             if evento.type == pygame.KEYDOWN:
                 if evento.key == pygame.K_s:
-                    bloquinho = Movimentacao(bloquinho, "baixo")
+                    trava = Checar_Movimentos(index, bloquinho, espacinhos, "baixo")
+                    if not trava:
+                        bloquinho = Movimentacao(bloquinho, "baixo")
                 elif evento.key == pygame.K_d:
-                    bloquinho = Movimentacao(bloquinho, "direita")
+                    trava = Checar_Movimentos(index, bloquinho, espacinhos, "direita")
+                    if not trava:
+                        bloquinho = Movimentacao(bloquinho, "direita")
                 elif evento.key == pygame.K_a:
-                    bloquinho = Movimentacao(bloquinho, "esquerda")
+                    trava = Checar_Movimentos(index,bloquinho,espacinhos,"esquerda")
+                    if not trava:
+                        bloquinho = Movimentacao(bloquinho, "esquerda")
                 elif evento.key == pygame.K_SPACE:
+
                     if index + 1 < len(bloquinho):
                         index += 1
+                        sentido = Checar_Movimentos(index, bloquinho, espacinhos, "espaco")
+                        bloquinho = Movimentacao(bloquinho,sentido)
                     else:
                         index = 0
+                        sentido = Checar_Movimentos(index, bloquinho, espacinhos, "espaco")
+                        bloquinho = Movimentacao(bloquinho, sentido)
+
 
 
         if contador_segundos == 30:
-            bloquinho = Movimentacao(bloquinho, "baixo")
+            trava = Checar_Movimentos(index, bloquinho, espacinhos, "baixo")
+            if not trava:
+                bloquinho = Movimentacao(bloquinho, "baixo")
+            else:
+                for i in range(len(bloquinho[index])-1):
+                    espacinhos[int((bloquinho[index][i][1]-20)/30)].append((bloquinho[index][i][0],bloquinho[index][i][1],bloquinho[index][-1]))
+                bloquinho = Bloquinhos(TOPO_X+120,TOPO_Y)
+                index = 0
             titulo = Titulo(FONTES)
             contador_segundos = 0
 
-        bloquinho = Checar_Movimento_Lateral(index,bloquinho)
 
         tela.fill((0, 0, 0))
+        for i in range(len(espacinhos)):
+            for j in range(len(espacinhos[i])):
+                pygame.draw.rect(tela,espacinhos[i][j][-1],(espacinhos[i][j][0],espacinhos[i][j][1],tamanho,tamanho))
         tela.blit(titulo, (TOPO_X + (TOPO_X/2)-(titulo.get_width()/2),5))
         for i in range(len(bloquinho[index])-1):
-            pygame.draw.rect(tela, bloquinho[index][4],(bloquinho[index][i][0],bloquinho[index][i][1], tamanho, tamanho),0)
+            pygame.draw.rect(tela, bloquinho[index][-1],(bloquinho[index][i][0],bloquinho[index][i][1], tamanho, tamanho),0)
         Mapa(tela, TOPO_X, TOPO_Y, LARGURA_GRADE, ALTURA_GRADE)
         pygame.display.flip()
         contador_segundos = contador_segundos + 1
