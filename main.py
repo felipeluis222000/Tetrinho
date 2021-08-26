@@ -24,29 +24,30 @@ def Bloquinhos(x,y):
     formatos2 = [[(x,y-30,(178,34,98)),(x,y-60,(178,34,98)),(x,y-90,(178,34,98)),(x,y-120 ,(178,34,98))],
                  [(x,y-30,(178,34,98)),(x+30,y-30,(178,34,98)),(x+60,y-30,(178,34,98)),(x+90,y-30,(178,34,98))]]
 
-    '''formatos3 = [[(x-30,y),(x,y),(x,y+30),(x+30,y+30),(255,255,255)],
-                 [(x,y+30),(x+30,y+30),(x,y+60),(x+30,y),(255,255,255)]]
+    formatos3 = [[(x,y-90,(178,34,98)),(x+30,y-90,(178,34,98)),(x+30,y-120,(178,34,98)),(x+60,y-120,(178,34,98))],
+                 [(x+30,y-60,(178,34,98)),(x+30,y-90,(178,34,98)),(x,y-90,(178,34,98)),(x,y-120,(178,34,98))]]
 
-    formatos4 = [[(x-30,y+30),(x,y),(x,y+30),(x+30,y),(255,255,255)],
-                 [(x,y),(x,y+30),(x+30,y+30),(x+30,y+60),(255,255,255)]]
+    formatos4 = [[(x+60,y-90,(178,34,98)),(x+30,y-90,(178,34,98)),(x+30,y-120,(178,34,98)),(x,y-120,(178,34,98))],
+                 [(x,y-60,(178,34,98)),(x,y-90,(178,34,98)),(x+30,y-90,(178,34,98)),(x+30,y-120,(178,34,98))]]
 
-    formatos5 = [[(x,y),(x+30,y),(x,y+30),(x+60,y),(255,255,255)],
-                 [(x,y),(x+30,y),(x+30,y+30),(x+30,y+60),(255,255,255)],
-                 [(x-30,y+30),(x+30,y),(x,y+30),(x+30,y+30),(255,255,255)],
-                 [(x,y),(x,y+30),(x,y+60),(x+30,y+60),(255,255,255)]]
+    formatos5 = [[(x,y-90,(178,34,98)),(x+30,y-90,(178,34,98)),(x+60,y-90,(178,34,98)),(x+30,y-120,(178,34,98))],
+                 [(x,y-30,(178,34,98)),(x,y-60,(178,34,98)),(x+30,y-60,(178,34,98)),(x,y-90,(178,34,98))],
+                 [(x+30,y-90,(178,34,98)),(x+30,y-120,(178,34,98)),(x+60,y-120,(178,34,98)),(x,y-120,(178,34,98))],
+                 [(x+30,y-30,(178,34,98)),(x+30,y-60,(178,34,98)),(x,y-60,(178,34,98)),(x+30,y-90,(178,34,98))]]
 
-    formatos6 = [[(x,y),(x+30,y),(x+60,y+30),(x+60,y),(255,255,255)],
-                 [(x,y+60),(x+30,y),(x+30,y+30),(x+30,y+60),(255,255,255)],
-                 [(x,y),(x+30,y+30),(x,y+30),(x+60,y+30),(255,255,255)],
-                 [(x,y),(x,y+30),(x,y+60),(x+30,y),(255,255,255)]]
+    formatos6 = [[(x,y-90,(178,34,98)),(x,y-120,(178,34,98)),(x+30,y-90,(178,34,98)),(x+60,y-90,(178,34,98))],
+                 [(x,y-60,(178,34,98)),(x,y-90,(178,34,98)),(x,y-120,(178,34,98)),(x+30,y-120,(178,34,98))],
+                 [(x,y-120,(178,34,98)),(x+30,y-120,(178,34,98)),(x+60,y-120,(178,34,98)),(x+60,y-90,(178,34,98))],
+                 [(x,y-60,(178,34,98)),(x+30,y-60,(178,34,98)),(x+30,y-90,(178,34,98)),(x+30,y-120,(178,34,98))]]
 
-    formatos7 = [[(x-30,y),(x,y),(x,y+30),(x+30,y),(255,255,255)],
-                 [(x-30,y+30),(x,y),(x,y+30),(x,y+60),(255,255,255)],
-                 [(x-30,y+30),(x,y),(x,y+30),(x+30,y+30),(255,255,255)],
-                 [(x,y),(x,y+30),(x,y+60),(x+30,y+30),(255,255,255)]]
+    formatos7 = [[(x,y-90,(178,34,98)),(x,y-120,(178,34,98)),(x+30,y-120,(178,34,98)),(x+60,y-120,(178,34,98))],
+                 [(x+30,y-60,(178,34,98)),(x+30,y-90,(178,34,98)),(x+30,y-120,(178,34,98)),(x,y-120,(178,34,98))],
+                 [(x,y-90,(178,34,98)),(x+30,y-90,(178,34,98)),(x+60,y-90,(178,34,98)),(x+60,y-120,(178,34,98))],
+                 [(x,y-60,(178,34,98)),(x+30,y-60,(178,34,98)),(x,y-90,(178,34,98)),(x,y-120,(178,34,98))]]
 
-    lista_de_formatos = [formatos1,formatos2,formatos3,formatos4,formatos5,formatos6,formatos7]'''
-    return formatos2
+
+    lista_de_formatos = random.choice([[formatos1,"1"],[formatos2,"2"],[formatos3,"3"],[formatos4,"4"],[formatos5,"5"],[formatos6,"6"],[formatos7,"7"]])
+    return lista_de_formatos[0],lista_de_formatos[1]
 
 def Titulo(fontes):
     cor = (random.randint(0,255), random.randint(0,255), random.randint(0,255))
@@ -110,17 +111,22 @@ def Movimentacao(bloquinho, sentido):
     else:
         return bloquinho
 
-def Checar_Movimentos(index,bloquinho,espacinhos,sentido,contador=0):
+def Checar_Movimentos(index,bloquinho,espacinhos,sentido,formato=None,contador=0):
     if sentido == "espaco":
+        print(formato)
+        if formato == "2":
+            limite = 3
+        else:
+            limite = 1
         contador = contador
-        while contador <= 3:
+        while contador <= limite:
             for i in range(len(espacinhos)):
                 for j in range(len(espacinhos[i])):
                     for i2 in range(len(bloquinho[index])):
                         if bloquinho[index][i2][0] == espacinhos[i][j][0] and bloquinho[index][i2][1] == espacinhos[i][j][1]:
                             contador += 1
                             bloquinho = Movimentacao(bloquinho, "esquerda")
-                            bloquinho,trava = Checar_Movimentos(index,bloquinho,espacinhos,sentido,contador=contador)
+                            bloquinho,trava = Checar_Movimentos(index,bloquinho,espacinhos,sentido,formato=formato,contador=contador)
                             if trava:
                                 return bloquinho,True
                             else:
@@ -152,7 +158,7 @@ def Main(tela):
     rodando = True
     titulo = Titulo(FONTES)
     espacinhos = Vacuos(TOPO_X,TOPO_Y)
-    bloquinho = Bloquinhos(TOPO_X+120,TOPO_Y+120)
+    bloquinho,formato = Bloquinhos(TOPO_X+120,TOPO_Y+120)
     while rodando:
         clock.tick(30)
         for evento in pygame.event.get():
@@ -176,17 +182,17 @@ def Main(tela):
                     bloquinho2 = bloquinho
                     if index + 1 < len(bloquinho):
                         index += 1
-                        bloquinho,trava = Checar_Movimentos(index,bloquinho,espacinhos,"espaco")
+                        bloquinho,trava = Checar_Movimentos(index,bloquinho,espacinhos,"espaco",formato=formato)
                         if trava:
                             bloquinho = bloquinho2
                             index -= 1
 
                     else:
                         index = 0
-                        bloquinho,trava = Checar_Movimentos(index,bloquinho,espacinhos,"espaco")
+                        bloquinho,trava = Checar_Movimentos(index,bloquinho,espacinhos,"espaco",formato=formato)
                         if trava:
                             bloquinho = bloquinho2
-                            index = len(bloquinho)
+                            index = len(bloquinho)-1
 
 
 
@@ -198,7 +204,7 @@ def Main(tela):
             else:
                 for i in range(len(bloquinho[index])):
                     espacinhos[int((bloquinho[index][i][1]-20)/30)].append((bloquinho[index][i][0],bloquinho[index][i][1],bloquinho[index][i][-1]))
-                bloquinho = Bloquinhos(TOPO_X+120,TOPO_Y+120)
+                bloquinho,formato = Bloquinhos(TOPO_X+120,TOPO_Y+120)
                 index = 0
             titulo = Titulo(FONTES)
             contador_segundos = 0
