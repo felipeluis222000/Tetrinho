@@ -114,7 +114,7 @@ def Movimentacao(bloquinho, sentido):
 def Checar_Movimentos(index,bloquinho,espacinhos,sentido,formato=None,contador=0):
     if sentido == "espaco":
         print(formato)
-        if formato == "2":
+        if formato == "2" and index == 1:
             limite = 3
         else:
             limite = 1
