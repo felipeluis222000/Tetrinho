@@ -46,8 +46,8 @@ def Bloquinhos(x,y):
                  [(x,y-60,(178,34,98)),(x+30,y-60,(178,34,98)),(x,y-90,(178,34,98)),(x,y-120,(178,34,98))]]
 
 
-    lista_de_formatos = random.choice([[formatos1,"1"],[formatos2,"2"],[formatos3,"3"],[formatos4,"4"],[formatos5,"5"],[formatos6,"6"],[formatos7,"7"]])
-    return formatos3,"3"
+    lista_de_formatos = random.choice([[formatos1,"1"],[formatos2,"2"],[formatos3,"3"]])
+    return lista_de_formatos[0],lista_de_formatos[1]
 
 def Titulo(fontes):
     cor = (random.randint(0,255), random.randint(0,255), random.randint(0,255))
@@ -145,13 +145,13 @@ def Checar_Movimentos(index,bloquinho,espacinhos,sentido,formato=None,contador=0
                         if bloquinho[index][i2][0] == espacinhos[i][j][0] and bloquinho[index][i2][1] == espacinhos[i][j][1]:
                             contador += 1
                             bloquinho = Movimentacao(bloquinho, "esquerda")
-                            bloquinho,trava = Checar_Movimentos(index,bloquinho,espacinhos,sentido,contador=contador)
+                            bloquinho, trava = Checar_Movimentos(index, bloquinho, espacinhos, sentido, formato=formato,contador=contador)
                             if trava:
-                                return bloquinho,True
+                                return bloquinho, True
                             else:
                                 break
-            return bloquinho,False
-        return bloquinho,True
+            return bloquinho, False
+        return bloquinho, True
 
     else:
         passo_falso = Movimentacao(bloquinho, sentido)
