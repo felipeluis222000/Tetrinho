@@ -47,7 +47,7 @@ def Bloquinhos(x,y):
 
 
     lista_de_formatos = random.choice([[formatos1,"1"],[formatos2,"2"],[formatos3,"3"],[formatos4,"4"],[formatos5,"5"],[formatos6,"6"],[formatos7,"7"]])
-    return lista_de_formatos[0],lista_de_formatos[1]
+    return formatos3,"3"
 
 def Titulo(fontes):
     cor = (random.randint(0,255), random.randint(0,255), random.randint(0,255))
@@ -63,6 +63,26 @@ def Mapa(tela, x, y, largura, altura):
         pygame.draw.line(tela, (128,128,128), (x,y+(i*30)), (x+300,y+(i*30)))
     pygame.draw.rect(tela, (72,61,139), (x,y, largura, altura), 3)
 
+
+def Desenhando_prox_bloquinho(prox_bloquinho,prox_formato):
+    for i in range(len(prox_bloquinho[0])):
+        pygame.draw.rect(tela, prox_bloquinho[0][i][-1],(prox_bloquinho[0][i][0] + 270, prox_bloquinho[0][i][1], 30, 30), 0)
+    if prox_formato == "1":
+        for i in range(3):
+            pygame.draw.line(tela,(128,128,128),(prox_bloquinho[0][0][0]+270,prox_bloquinho[0][0][1]+(i*30)-30),(prox_bloquinho[0][0][0]+330,prox_bloquinho[0][0][1]+(i*30)-30))
+            pygame.draw.line(tela,(128,128,128),(prox_bloquinho[0][0][0]+(i*30)+270,prox_bloquinho[0][0][1]-30),(prox_bloquinho[0][0][0]+(i*30)+270,prox_bloquinho[0][0][1]+30))
+    elif prox_formato == "2":
+        for i in range(5):
+            pygame.draw.line(tela,(128,128,128),(prox_bloquinho[0][0][0]+270,prox_bloquinho[0][0][1]+(i*30)-90),(prox_bloquinho[0][0][0]+300,prox_bloquinho[0][0][1]+(i*30)-90))
+        for i in range(2):
+            pygame.draw.line(tela,(128,128,128),(prox_bloquinho[0][0][0]+(i*30)+270,prox_bloquinho[0][0][1]-90),(prox_bloquinho[0][0][0]+(i*30)+270,prox_bloquinho[0][0][1]+30))
+    elif prox_formato == "3":
+        for i in range(2):
+            pygame.draw.line(tela,(128,128,128),(prox_bloquinho[0][0][0]+300,prox_bloquinho[0][0][1]+(i*30)-30),(prox_bloquinho[0][0][0]+360,prox_bloquinho[0][0][1]+(i*30)-30))
+            pygame.draw.line(tela,(128,128,128),(prox_bloquinho[0][0][0]+270,prox_bloquinho[0][0][1]+(i*30)),(prox_bloquinho[0][0][0]+330,prox_bloquinho[0][0][1]+(i*30)))
+        for i in range(3):
+            pygame.draw.line(tela,(128,128,128),(prox_bloquinho[0][0][0]+(i*30)+270,prox_bloquinho[0][0][1]),(prox_bloquinho[0][0][0]+(i*30)+270,prox_bloquinho[0][0][1]+30))
+            pygame.draw.line(tela,(128,128,128),(prox_bloquinho[0][0][0]+(i*30)+300,prox_bloquinho[0][0][1]-30),(prox_bloquinho[0][0][0]+(i*30)+300,prox_bloquinho[0][0][1]))
 def Vacuos(x,y):
     espacinhos = [[] for _ in range(0,21)]
     for i in range(10):
@@ -113,7 +133,6 @@ def Movimentacao(bloquinho, sentido):
 
 def Checar_Movimentos(index,bloquinho,espacinhos,sentido,formato=None,contador=0):
     if sentido == "espaco":
-        print(formato)
         if formato == "2" and index == 1:
             limite = 3
         else:
@@ -126,7 +145,7 @@ def Checar_Movimentos(index,bloquinho,espacinhos,sentido,formato=None,contador=0
                         if bloquinho[index][i2][0] == espacinhos[i][j][0] and bloquinho[index][i2][1] == espacinhos[i][j][1]:
                             contador += 1
                             bloquinho = Movimentacao(bloquinho, "esquerda")
-                            bloquinho,trava = Checar_Movimentos(index,bloquinho,espacinhos,sentido,formato=formato,contador=contador)
+                            bloquinho,trava = Checar_Movimentos(index,bloquinho,espacinhos,sentido,contador=contador)
                             if trava:
                                 return bloquinho,True
                             else:
@@ -159,6 +178,7 @@ def Main(tela):
     titulo = Titulo(FONTES)
     espacinhos = Vacuos(TOPO_X,TOPO_Y)
     bloquinho,formato = Bloquinhos(TOPO_X+120,TOPO_Y+120)
+    prox_bloquinho,prox_formato = Bloquinhos(TOPO_X+120,TOPO_Y+120)
     while rodando:
         clock.tick(30)
         for evento in pygame.event.get():
@@ -204,7 +224,8 @@ def Main(tela):
             else:
                 for i in range(len(bloquinho[index])):
                     espacinhos[int((bloquinho[index][i][1]-20)/30)].append((bloquinho[index][i][0],bloquinho[index][i][1],bloquinho[index][i][-1]))
-                bloquinho,formato = Bloquinhos(TOPO_X+120,TOPO_Y+120)
+                bloquinho,formato = prox_bloquinho,prox_formato
+                prox_bloquinho,prox_formato = Bloquinhos(TOPO_X+120,TOPO_Y+120)
                 index = 0
             titulo = Titulo(FONTES)
             contador_segundos = 0
@@ -215,6 +236,7 @@ def Main(tela):
             for j in range(len(espacinhos[i])):
                 pygame.draw.rect(tela,espacinhos[i][j][-1],(espacinhos[i][j][0],espacinhos[i][j][1],tamanho,tamanho))
         tela.blit(titulo, (TOPO_X + (TOPO_X/2)-(titulo.get_width()/2),5))
+        Desenhando_prox_bloquinho(prox_bloquinho,prox_formato)
         for i in range(len(bloquinho[index])):
             pygame.draw.rect(tela, bloquinho[index][i][-1],(bloquinho[index][i][0],bloquinho[index][i][1], tamanho, tamanho),0)
         Mapa(tela, TOPO_X, TOPO_Y, LARGURA_GRADE, ALTURA_GRADE)
