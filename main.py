@@ -274,14 +274,14 @@ def Main(tela):
             contador_segundos = 0
 
         tela.fill((0, 0, 0))
+        for i in range(len(bloquinho[index])):
+            pygame.draw.rect(tela, bloquinho[index][i][-1],(bloquinho[index][i][0],bloquinho[index][i][1], tamanho, tamanho),0)
         for i in range(len(espacinhos)):
             for j in range(len(espacinhos[i])):
                 pygame.draw.rect(tela,espacinhos[i][j][-1],(espacinhos[i][j][0],espacinhos[i][j][1],tamanho,tamanho))
         tela.blit(titulo, (TOPO_X + (TOPO_X/2)-(titulo.get_width()/2),5))
         tela.blit(frases, (600+150-(frases.get_width()/2),325))
         Desenhando_prox_bloquinho(prox_bloquinho,prox_formato)
-        for i in range(len(bloquinho[index])):
-            pygame.draw.rect(tela, bloquinho[index][i][-1],(bloquinho[index][i][0],bloquinho[index][i][1], tamanho, tamanho),0)
         Mapa(tela, TOPO_X, TOPO_Y, LARGURA_GRADE, ALTURA_GRADE)
         pygame.display.flip()
         contador_segundos = contador_segundos + 1
