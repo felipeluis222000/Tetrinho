@@ -19,70 +19,103 @@ tela = pygame.display.set_mode((LARGURA, ALTURA))
 pygame.display.set_caption("Tetrinho")
 
 def Bloquinhos(x,y):
-    formatos1 = [[(x,y-90,(255,255,255)),(x+30,y-90,(255,255,255)),(x,y-120,(255,255,255)),(x+30,y-120,(255,255,255))]]
+    formatos1 = [[(x,y-90,(0,0,205)),(x+30,y-90,(0,0,205)),(x,y-120,(0,0,205)),(x+30,y-120,(0,0,205))]]
 
-    formatos2 = [[(x,y-30,(178,34,98)),(x,y-60,(178,34,98)),(x,y-90,(178,34,98)),(x,y-120 ,(178,34,98))],
-                 [(x,y-30,(178,34,98)),(x+30,y-30,(178,34,98)),(x+60,y-30,(178,34,98)),(x+90,y-30,(178,34,98))]]
+    formatos2 = [[(x,y-30,(0,128,0)),(x,y-60,(0,128,0)),(x,y-90,(0,128,0)),(x,y-120 ,(0,128,0))],
+                 [(x,y-30,(0,128,0)),(x+30,y-30,(0,128,0)),(x+60,y-30,(0,128,0)),(x+90,y-30,(0,128,0))]]
 
-    formatos3 = [[(x,y-90,(178,34,98)),(x+30,y-90,(178,34,98)),(x+30,y-120,(178,34,98)),(x+60,y-120,(178,34,98))],
-                 [(x+30,y-60,(178,34,98)),(x+30,y-90,(178,34,98)),(x,y-90,(178,34,98)),(x,y-120,(178,34,98))]]
+    formatos3 = [[(x,y-90,(148,0,211)),(x+30,y-90,(148,0,211)),(x+30,y-120,(148,0,211)),(x+60,y-120,(148,0,211))],
+                 [(x+30,y-60,(148,0,211)),(x+30,y-90,(148,0,211)),(x,y-90,(148,0,211)),(x,y-120,(148,0,211))]]
 
-    formatos4 = [[(x+60,y-90,(178,34,98)),(x+30,y-90,(178,34,98)),(x+30,y-120,(178,34,98)),(x,y-120,(178,34,98))],
-                 [(x,y-60,(178,34,98)),(x,y-90,(178,34,98)),(x+30,y-90,(178,34,98)),(x+30,y-120,(178,34,98))]]
+    formatos4 = [[(x+60,y-90,(255,20,147)),(x+30,y-90,(255,20,147)),(x+30,y-120,(255,20,147)),(x,y-120,(255,20,147))],
+                 [(x,y-60,(255,20,147)),(x,y-90,(255,20,147)),(x+30,y-90,(255,20,147)),(x+30,y-120,(255,20,147))]]
 
-    formatos5 = [[(x,y-90,(178,34,98)),(x+30,y-90,(178,34,98)),(x+60,y-90,(178,34,98)),(x+30,y-120,(178,34,98))],
-                 [(x,y-30,(178,34,98)),(x,y-60,(178,34,98)),(x+30,y-60,(178,34,98)),(x,y-90,(178,34,98))],
-                 [(x+30,y-90,(178,34,98)),(x+30,y-120,(178,34,98)),(x+60,y-120,(178,34,98)),(x,y-120,(178,34,98))],
-                 [(x+30,y-30,(178,34,98)),(x+30,y-60,(178,34,98)),(x,y-60,(178,34,98)),(x+30,y-90,(178,34,98))]]
+    formatos5 = [[(x,y-90,(255,0,0)),(x+30,y-90,(255,0,0)),(x+60,y-90,(255,0,0)),(x+30,y-120,(255,0,0))],
+                 [(x,y-30,(255,0,0)),(x,y-60,(255,0,0)),(x+30,y-60,(255,0,0)),(x,y-90,(255,0,0))],
+                 [(x+30,y-90,(255,0,0)),(x+30,y-120,(255,0,0)),(x+60,y-120,(255,0,0)),(x,y-120,(255,0,0))],
+                 [(x+30,y-30,(255,0,0)),(x+30,y-60,(255,0,0)),(x,y-60,(255,0,0)),(x+30,y-90,(255,0,0))]]
 
-    formatos6 = [[(x,y-90,(178,34,98)),(x,y-120,(178,34,98)),(x+30,y-90,(178,34,98)),(x+60,y-90,(178,34,98))],
-                 [(x,y-60,(178,34,98)),(x,y-90,(178,34,98)),(x,y-120,(178,34,98)),(x+30,y-120,(178,34,98))],
-                 [(x,y-120,(178,34,98)),(x+30,y-120,(178,34,98)),(x+60,y-120,(178,34,98)),(x+60,y-90,(178,34,98))],
-                 [(x,y-60,(178,34,98)),(x+30,y-60,(178,34,98)),(x+30,y-90,(178,34,98)),(x+30,y-120,(178,34,98))]]
+    formatos6 = [[(x,y-90,(255,69,0)),(x,y-120,(255,69,0)),(x+30,y-90,(255,69,0)),(x+60,y-90,(255,69,0))],
+                 [(x,y-60,(255,69,0)),(x,y-90,(255,69,0)),(x,y-120,(255,69,0)),(x+30,y-120,(255,69,0))],
+                 [(x,y-120,(255,69,0)),(x+30,y-120,(255,69,0)),(x+60,y-120,(255,69,0)),(x+60,y-90,(255,69,0))],
+                 [(x,y-60,(255,69,0)),(x+30,y-60,(255,69,0)),(x+30,y-90,(255,69,0)),(x+30,y-120,(255,69,0))]]
 
-    formatos7 = [[(x,y-90,(178,34,98)),(x,y-120,(178,34,98)),(x+30,y-120,(178,34,98)),(x+60,y-120,(178,34,98))],
-                 [(x+30,y-60,(178,34,98)),(x+30,y-90,(178,34,98)),(x+30,y-120,(178,34,98)),(x,y-120,(178,34,98))],
-                 [(x,y-90,(178,34,98)),(x+30,y-90,(178,34,98)),(x+60,y-90,(178,34,98)),(x+60,y-120,(178,34,98))],
-                 [(x,y-60,(178,34,98)),(x+30,y-60,(178,34,98)),(x,y-90,(178,34,98)),(x,y-120,(178,34,98))]]
+    formatos7 = [[(x,y-90,(255,255,0)),(x,y-120,(255,255,0)),(x+30,y-120,(255,255,0)),(x+60,y-120,(255,255,0))],
+                 [(x+30,y-60,(255,255,0)),(x+30,y-90,(255,255,0)),(x+30,y-120,(255,255,0)),(x,y-120,(255,255,0))],
+                 [(x,y-90,(255,255,0)),(x+30,y-90,(255,255,0)),(x+60,y-90,(255,255,0)),(x+60,y-120,(255,255,0))],
+                 [(x,y-60,(255,255,0)),(x+30,y-60,(255,255,0)),(x,y-90,(255,255,0)),(x,y-120,(255,255,0))]]
 
 
-    lista_de_formatos = random.choice([[formatos1,"1"],[formatos2,"2"],[formatos3,"3"]])
+    lista_de_formatos = random.choice([[formatos1,"1"],[formatos2,"2"],[formatos3,"3"],[formatos4,"4"],[formatos5,"5"],[formatos6,"6"],[formatos7,"7"]])
     return lista_de_formatos[0],lista_de_formatos[1]
 
-def Titulo(fontes):
+def Titulo(fontes,indicacao):
+    frases = ["Tetrinho","Proximo bloco"]
     cor = (random.randint(0,255), random.randint(0,255), random.randint(0,255))
     fonte = random.choice(fontes)
-    titulo = pygame.font.Font("fontes_uuiii/{}".format(fonte),50)
-    titulo2 = titulo.render("Tetrinho", 1, (cor))
+    if indicacao == 1:
+        titulo = pygame.font.Font("fontes_uuiii/{}".format(fonte), 50)
+        titulo2 = titulo.render(frases[0], 1, (cor))
+    elif indicacao == 2:
+        titulo = pygame.font.Font("fontes_uuiii/{}".format(fonte), 30)
+        titulo2 = titulo.render(frases[1], 1, (cor))
     return titulo2
 
 def Mapa(tela, x, y, largura, altura):
     for i in range(10):
-        pygame.draw.line(tela, (128,128,128), (x+(i*30),y),(x+(i*30),altura+50))
+        pygame.draw.line(tela, (169,169,169), (x+(i*30),y),(x+(i*30),altura+50))
     for i in range(20):
-        pygame.draw.line(tela, (128,128,128), (x,y+(i*30)), (x+300,y+(i*30)))
-    pygame.draw.rect(tela, (72,61,139), (x,y, largura, altura), 3)
-
+        pygame.draw.line(tela, (169,169,169), (x,y+(i*30)), (x+300,y+(i*30)))
+    pygame.draw.rect(tela, (75,0,130), (x,y, largura, altura), 3)
 
 def Desenhando_prox_bloquinho(prox_bloquinho,prox_formato):
     for i in range(len(prox_bloquinho[0])):
-        pygame.draw.rect(tela, prox_bloquinho[0][i][-1],(prox_bloquinho[0][i][0] + 270, prox_bloquinho[0][i][1], 30, 30), 0)
+        pygame.draw.rect(tela, prox_bloquinho[0][i][-1],(prox_bloquinho[0][i][0]+300,prox_bloquinho[0][i][1]+320,30,30), 0)
     if prox_formato == "1":
         for i in range(3):
-            pygame.draw.line(tela,(128,128,128),(prox_bloquinho[0][0][0]+270,prox_bloquinho[0][0][1]+(i*30)-30),(prox_bloquinho[0][0][0]+330,prox_bloquinho[0][0][1]+(i*30)-30))
-            pygame.draw.line(tela,(128,128,128),(prox_bloquinho[0][0][0]+(i*30)+270,prox_bloquinho[0][0][1]-30),(prox_bloquinho[0][0][0]+(i*30)+270,prox_bloquinho[0][0][1]+30))
+            pygame.draw.line(tela,(169,169,169),(prox_bloquinho[0][0][0]+300,prox_bloquinho[0][0][1]+(i*30)+290),(prox_bloquinho[0][0][0]+360,prox_bloquinho[0][0][1]+(i*30)+290))
+            pygame.draw.line(tela,(169,169,169),(prox_bloquinho[0][0][0]+(i*30)+300,prox_bloquinho[0][0][1]+290),(prox_bloquinho[0][0][0]+(i*30)+300,prox_bloquinho[0][0][1]+350))
     elif prox_formato == "2":
         for i in range(5):
-            pygame.draw.line(tela,(128,128,128),(prox_bloquinho[0][0][0]+270,prox_bloquinho[0][0][1]+(i*30)-90),(prox_bloquinho[0][0][0]+300,prox_bloquinho[0][0][1]+(i*30)-90))
+            pygame.draw.line(tela,(169,169,169),(prox_bloquinho[0][0][0]+300,prox_bloquinho[0][0][1]+(i*30)+230),(prox_bloquinho[0][0][0]+330,prox_bloquinho[0][0][1]+(i*30)+230))
         for i in range(2):
-            pygame.draw.line(tela,(128,128,128),(prox_bloquinho[0][0][0]+(i*30)+270,prox_bloquinho[0][0][1]-90),(prox_bloquinho[0][0][0]+(i*30)+270,prox_bloquinho[0][0][1]+30))
+            pygame.draw.line(tela,(169,169,169),(prox_bloquinho[0][0][0]+(i*30)+300,prox_bloquinho[0][0][1]+230),(prox_bloquinho[0][0][0]+(i*30)+300,prox_bloquinho[0][0][1]+350))
     elif prox_formato == "3":
         for i in range(2):
-            pygame.draw.line(tela,(128,128,128),(prox_bloquinho[0][0][0]+300,prox_bloquinho[0][0][1]+(i*30)-30),(prox_bloquinho[0][0][0]+360,prox_bloquinho[0][0][1]+(i*30)-30))
-            pygame.draw.line(tela,(128,128,128),(prox_bloquinho[0][0][0]+270,prox_bloquinho[0][0][1]+(i*30)),(prox_bloquinho[0][0][0]+330,prox_bloquinho[0][0][1]+(i*30)))
+            pygame.draw.line(tela,(169,169,169),(prox_bloquinho[0][0][0]+330,prox_bloquinho[0][0][1]+(i*30)+290),(prox_bloquinho[0][0][0]+390,prox_bloquinho[0][0][1]+(i*30)+290))
+            pygame.draw.line(tela,(169,169,169),(prox_bloquinho[0][0][0]+300,prox_bloquinho[0][0][1]+(i*30)+320),(prox_bloquinho[0][0][0]+360,prox_bloquinho[0][0][1]+(i*30)+320))
         for i in range(3):
-            pygame.draw.line(tela,(128,128,128),(prox_bloquinho[0][0][0]+(i*30)+270,prox_bloquinho[0][0][1]),(prox_bloquinho[0][0][0]+(i*30)+270,prox_bloquinho[0][0][1]+30))
-            pygame.draw.line(tela,(128,128,128),(prox_bloquinho[0][0][0]+(i*30)+300,prox_bloquinho[0][0][1]-30),(prox_bloquinho[0][0][0]+(i*30)+300,prox_bloquinho[0][0][1]))
+            pygame.draw.line(tela,(169,169,169),(prox_bloquinho[0][0][0]+(i*30)+300,prox_bloquinho[0][0][1]+320),(prox_bloquinho[0][0][0]+(i*30)+300,prox_bloquinho[0][0][1]+350))
+            pygame.draw.line(tela,(169,169,169),(prox_bloquinho[0][0][0]+(i*30)+330,prox_bloquinho[0][0][1]+290),(prox_bloquinho[0][0][0]+(i*30)+330,prox_bloquinho[0][0][1]+320))
+    elif prox_formato == "4":
+        for i in range(3):
+            pygame.draw.line(tela,(169,169,169),(prox_bloquinho[0][0][0]+(i*30)+240,prox_bloquinho[0][0][1]+290),(prox_bloquinho[0][0][0]+(i*30)+240,prox_bloquinho[0][0][1]+320))
+            pygame.draw.line(tela,(169,169,169),(prox_bloquinho[0][0][0]+(i*30)+270,prox_bloquinho[0][0][1]+320),(prox_bloquinho[0][0][0]+(i*30)+270,prox_bloquinho[0][0][1]+350))
+        for i in range(2):
+            pygame.draw.line(tela,(169,169,169),(prox_bloquinho[0][0][0]+270,prox_bloquinho[0][0][1]+(i*30)+320),(prox_bloquinho[0][0][0]+330,prox_bloquinho[0][0][1]+(i*30)+320))
+            pygame.draw.line(tela,(169,169,169),(prox_bloquinho[0][0][0]+240,prox_bloquinho[0][0][1]+(i*30)+290),(prox_bloquinho[0][0][0]+300,prox_bloquinho[0][0][1]+(i*30)+290))
+    elif prox_formato == "5":
+        for i in range(2):
+            pygame.draw.line(tela,(169,169,169),(prox_bloquinho[0][0][0]+(i*30)+330,prox_bloquinho[0][0][1]+290),(prox_bloquinho[0][0][0]+(i*30)+330,prox_bloquinho[0][0][1]+320))
+            pygame.draw.line(tela,(169,169,169),(prox_bloquinho[0][0][0]+330,prox_bloquinho[0][0][1]+(i*30)+290),(prox_bloquinho[0][0][0]+360,prox_bloquinho[0][0][1]+(i*30)+290))
+            pygame.draw.line(tela,(169,169,169),(prox_bloquinho[0][0][0]+300,prox_bloquinho[0][0][1]+(i*30)+320),(prox_bloquinho[0][0][0]+390,prox_bloquinho[0][0][1]+(i*30)+320))
+        for i in range(4):
+            pygame.draw.line(tela,(169,169,169),(prox_bloquinho[0][0][0]+(i*30)+300,prox_bloquinho[0][0][1]+320),(prox_bloquinho[0][0][0]+(i*30)+300,prox_bloquinho[0][0][1]+350))
+    elif prox_formato == "6":
+        for i in range(2):
+            pygame.draw.line(tela,(169,169,169),(prox_bloquinho[0][0][0]+(i*30)+300,prox_bloquinho[0][0][1]+290),(prox_bloquinho[0][0][0]+(i*30)+300,prox_bloquinho[0][0][1]+320))
+            pygame.draw.line(tela,(169,169,169),(prox_bloquinho[0][0][0]+300,prox_bloquinho[0][0][1]+(i*30)+320),(prox_bloquinho[0][0][0]+390,prox_bloquinho[0][0][1]+(i*30)+320))
+            pygame.draw.line(tela,(169,169,169),(prox_bloquinho[0][0][0]+300,prox_bloquinho[0][0][1]+(i*30)+290),(prox_bloquinho[0][0][0]+330,prox_bloquinho[0][0][1]+(i*30)+290))
+        for i in range(4):
+            pygame.draw.line(tela,(169,169,169),(prox_bloquinho[0][0][0]+(i*30)+300,prox_bloquinho[0][0][1]+320),(prox_bloquinho[0][0][0]+(i*30)+300,prox_bloquinho[0][0][1]+350))
+    elif prox_formato == "7":
+        for i in range(4):
+            pygame.draw.line(tela,(169,169,169),(prox_bloquinho[0][0][0]+(i*30)+300,prox_bloquinho[0][0][1]+290),(prox_bloquinho[0][0][0]+(i*30)+300,prox_bloquinho[0][0][1]+320))
+        for i in range(2):
+            pygame.draw.line(tela,(169,169,169),(prox_bloquinho[0][0][0]+(i*30)+300,prox_bloquinho[0][0][1]+320),(prox_bloquinho[0][0][0]+(i*30)+300,prox_bloquinho[0][0][1]+350))
+            pygame.draw.line(tela,(169,169,169),(prox_bloquinho[0][0][0]+300,prox_bloquinho[0][0][1]+(i*30)+290),(prox_bloquinho[0][0][0]+390,prox_bloquinho[0][0][1]+(i*30)+290))
+            pygame.draw.line(tela,(169,169,169),(prox_bloquinho[0][0][0]+300,prox_bloquinho[0][0][1]+(i*30)+320),(prox_bloquinho[0][0][0]+330,prox_bloquinho[0][0][1]+(i*30)+320))
+
 def Vacuos(x,y):
     espacinhos = [[] for _ in range(0,21)]
     for i in range(10):
@@ -145,13 +178,13 @@ def Checar_Movimentos(index,bloquinho,espacinhos,sentido,formato=None,contador=0
                         if bloquinho[index][i2][0] == espacinhos[i][j][0] and bloquinho[index][i2][1] == espacinhos[i][j][1]:
                             contador += 1
                             bloquinho = Movimentacao(bloquinho, "esquerda")
-                            bloquinho, trava = Checar_Movimentos(index, bloquinho, espacinhos, sentido, formato=formato,contador=contador)
+                            bloquinho,trava = Checar_Movimentos(index,bloquinho,espacinhos,sentido,formato=formato,contador=contador)
                             if trava:
-                                return bloquinho, True
+                                return bloquinho,True
                             else:
                                 break
-            return bloquinho, False
-        return bloquinho, True
+            return bloquinho,False
+        return bloquinho,True
 
     else:
         passo_falso = Movimentacao(bloquinho, sentido)
@@ -160,6 +193,12 @@ def Checar_Movimentos(index,bloquinho,espacinhos,sentido,formato=None,contador=0
                 for i2 in range(len(passo_falso[index])):
                     if passo_falso[index][i2][0] == espacinhos[i][j][0] and passo_falso[index][i2][1] == espacinhos[i][j][1]:
                         return True
+
+def Game_over(espacinhos):
+    if espacinhos[1]:
+        return True
+    else:
+        return False
 
 def Main(tela):
     global FONTES
@@ -175,7 +214,8 @@ def Main(tela):
     tamanho = 30
     contador_segundos = 0
     rodando = True
-    titulo = Titulo(FONTES)
+    titulo = Titulo(FONTES,1)
+    frases = Titulo(FONTES,2)
     espacinhos = Vacuos(TOPO_X,TOPO_Y)
     bloquinho,formato = Bloquinhos(TOPO_X+120,TOPO_Y+120)
     prox_bloquinho,prox_formato = Bloquinhos(TOPO_X+120,TOPO_Y+120)
@@ -214,9 +254,6 @@ def Main(tela):
                             bloquinho = bloquinho2
                             index = len(bloquinho)-1
 
-
-
-
         if contador_segundos == 30:
             trava = Checar_Movimentos(index, bloquinho, espacinhos, "baixo")
             if not trava:
@@ -224,18 +261,24 @@ def Main(tela):
             else:
                 for i in range(len(bloquinho[index])):
                     espacinhos[int((bloquinho[index][i][1]-20)/30)].append((bloquinho[index][i][0],bloquinho[index][i][1],bloquinho[index][i][-1]))
+                game_over = Game_over(espacinhos)
+                if game_over:
+                    rodando = False
+                    Tela_GO(tela,clock)
                 bloquinho,formato = prox_bloquinho,prox_formato
                 prox_bloquinho,prox_formato = Bloquinhos(TOPO_X+120,TOPO_Y+120)
                 index = 0
-            titulo = Titulo(FONTES)
-            contador_segundos = 0
 
+            titulo = Titulo(FONTES,1)
+            frases = Titulo(FONTES,2)
+            contador_segundos = 0
 
         tela.fill((0, 0, 0))
         for i in range(len(espacinhos)):
             for j in range(len(espacinhos[i])):
                 pygame.draw.rect(tela,espacinhos[i][j][-1],(espacinhos[i][j][0],espacinhos[i][j][1],tamanho,tamanho))
         tela.blit(titulo, (TOPO_X + (TOPO_X/2)-(titulo.get_width()/2),5))
+        tela.blit(frases, (600+150-(frases.get_width()/2),325))
         Desenhando_prox_bloquinho(prox_bloquinho,prox_formato)
         for i in range(len(bloquinho[index])):
             pygame.draw.rect(tela, bloquinho[index][i][-1],(bloquinho[index][i][0],bloquinho[index][i][1], tamanho, tamanho),0)
@@ -258,6 +301,38 @@ def Menu(tela):
 
         tela.fill((0,0,0))
         tela.blit(texto, ((LARGURA/2)-(texto.get_width()/2), (ALTURA/2)-(texto.get_height()/2)))
+        pygame.display.flip()
+
+def Tela_GO(tela,clock):
+    rodando = True
+    subida = 0
+    contador = 0
+    fonte = pygame.font.SysFont("Lucida Console",60)
+    texto = fonte.render("Game Over",False,(255,255,255))
+    fonte2 = pygame.font.SysFont("Lucida Console", 20)
+    while rodando:
+        clock.tick(80)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                rodando = False
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    rodando = False
+                    Main(tela)
+        tela.fill((0,0,0))
+        if 800 - subida > 350 - (texto.get_height()/2):
+            subida += 1
+        else:
+            contador += 1
+            if contador <= 30:
+                cor = (255,255,255)
+            elif contador >= 30 and contador <= 60:
+                cor = (0,0,0)
+            else:
+                contador = 0
+            texto2 = fonte2.render("Aperte espaço para jogar novamente", False, cor)
+            tela.blit(texto2, (450 - (texto2.get_width() / 2), 900 - subida))
+        tela.blit(texto, (450 - (texto.get_width() / 2), 800 - subida))
         pygame.display.flip()
 
 Menu(tela)
