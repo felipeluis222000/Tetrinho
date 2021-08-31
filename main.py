@@ -10,8 +10,8 @@ ALTURA_GRADE = 600
 TOPO_X = (LARGURA/2)-(LARGURA_GRADE/2)
 TOPO_Y = 50
 RANKING = {
-    "Jogadores": ["Felipe","","","","","","","","",""],
-    "Pontos": [10,0,0,0,0,0,0,0,0,0]
+    "Jogadores": ["Felipe","Klara","Jorge","Cauã","Augusto","Thiago","Mateus","Josefa","Ingridi","Julia"],
+    "Pontos": [100,90,80,70,60,50,40,30,20,10]
 }
 
 for diretorios,subpastas,arquivos in os.walk("fontes_uuiii"):
@@ -108,9 +108,9 @@ def Bloquinhos(x,y):
     lista_de_formatos = random.choice([[formatos1,"1"],[formatos2,"2"],[formatos3,"3"],[formatos4,"4"],[formatos5,"5"],[formatos6,"6"],[formatos7,"7"]])
     return lista_de_formatos[0],lista_de_formatos[1]
 
-def Titulo(fontes,indicacao,pontos=None, jogador=None):
+def Titulo(fontes,indicacao,pontos=None, jogador=None, lv=None):
     global RANKING
-    frases = ["Tetrinho","Próximo bloco","{}: {}".format(jogador,pontos), "Maior pontuação: {}".format(pontos)]
+    frases = ["Tetrinho","Próximo bloco","{}: {}".format(jogador,pontos), "Maior pontuação: {}".format(pontos), "Nível: {}".format(lv)]
     cor = (random.randint(0,255), random.randint(0,255), random.randint(0,255))
     fonte = random.choice(fontes)
 
@@ -129,6 +129,10 @@ def Titulo(fontes,indicacao,pontos=None, jogador=None):
     elif indicacao == 3:
         titulo = pygame.font.SysFont("Lucida Console", 20)
         titulo2 = titulo.render(frases[3], 1, (255, 255, 255))
+
+    elif indicacao == 4:
+        titulo = pygame.font.SysFont("Lucida Console", 20)
+        titulo2 = titulo.render(frases[4], 1, (255, 255, 255))
 
     return titulo2
 
@@ -284,11 +288,11 @@ def Checar_Movimentos(index,bloquinho,espacinhos,sentido,formato=None,contador=0
                     if passo_falso[index][i2][0] == espacinhos[i][j][0] and passo_falso[index][i2][1] == espacinhos[i][j][1]:
                         return True
 
-def Pontos(espacinhos,pontuacao, multiplicador=0):
+def Pontos(espacinhos,pontuacao, lv):
     multiplicador = 0
     for i in range(1,len(espacinhos)):
         if len(espacinhos[i]) == 10:
-            multiplicador += 1
+            multiplicador += 1*lv
             descida = espacinhos[1:i]
             descida.insert(0,[])
             espacinhos.remove(espacinhos[i])
@@ -300,8 +304,17 @@ def Pontos(espacinhos,pontuacao, multiplicador=0):
     pontuacao += 10*multiplicador
     return espacinhos,pontuacao
 
-def Game_over(espacinhos):
+def Game_over(espacinhos,jogador,pontuacao):
+    global RANKING
     if espacinhos[1]:
+        for i in range(len(RANKING["Pontos"])):
+            if pontuacao > RANKING["Pontos"][i]:
+                RANKING["Pontos"].insert(i,pontuacao)
+                RANKING["Jogadores"].insert(i, jogador)
+                RANKING["Pontos"].remove(RANKING["Pontos"][-1])
+                RANKING["Jogadores"].remove(RANKING["Jogadores"][-1])
+                break
+
         return True
 
     else:
@@ -323,7 +336,9 @@ def Main(tela,clock, nome_jogador):
     contador_segundos = 0
     rodando = True
     pontuacao = 0
-    nome_jogar = nome_jogador
+    base = 50
+    lv = 1
+    velocidade = 40
 
     titulo = Titulo(FONTES,0)
     proximo_bloco_texto = Titulo(FONTES,1)
@@ -332,7 +347,15 @@ def Main(tela,clock, nome_jogador):
     prox_bloquinho,prox_formato = Bloquinhos(TOPO_X+120,TOPO_Y+120)
 
     while rodando:
-        clock.tick(30)
+        clock.tick(60)
+
+        if pontuacao >= base:
+            lv += 1
+            base = base*lv
+            if velocidade-10 >= 1:
+                velocidade -= 10
+            else:
+                velocidade = 1
 
         if RANKING["Pontos"][0] >= pontuacao:
             texto_maior_pontuacao = Titulo(FONTES, 3, pontos=RANKING["Pontos"][0])
@@ -341,6 +364,7 @@ def Main(tela,clock, nome_jogador):
             texto_maior_pontuacao = Titulo(FONTES, 3, pontos=pontuacao)
 
         texto_pontuacao = Titulo(FONTES, 2, pontos=pontuacao, jogador=nome_jogador)
+        nivel = Titulo(FONTES,4,lv=lv)
 
         for evento in pygame.event.get():
             if evento.type == pygame.QUIT:
@@ -378,7 +402,7 @@ def Main(tela,clock, nome_jogador):
                             bloquinho = bloquinho2
                             index = len(bloquinho)-1
 
-        if contador_segundos == 30:
+        if contador_segundos == velocidade:
             trava = Checar_Movimentos(index, bloquinho, espacinhos, "baixo")
             if not trava:
                 bloquinho = Movimentacao(bloquinho, "baixo")
@@ -386,8 +410,8 @@ def Main(tela,clock, nome_jogador):
             else:
                 for i in range(len(bloquinho[index])):
                     espacinhos[int((bloquinho[index][i][1]-20)/30)].append((int(bloquinho[index][i][0]),int(bloquinho[index][i][1]),bloquinho[index][i][-1]))
-                espacinhos, pontuacao = Pontos(espacinhos, pontuacao)
-                game_over = Game_over(espacinhos)
+                espacinhos, pontuacao = Pontos(espacinhos, pontuacao, lv)
+                game_over = Game_over(espacinhos,nome_jogador,pontuacao)
                 if game_over:
                     rodando = False
                     Tela_GO(tela,clock)
@@ -409,7 +433,18 @@ def Main(tela,clock, nome_jogador):
         tela.blit(titulo, (TOPO_X + (TOPO_X/2)-(titulo.get_width()/2),5))
         tela.blit(proximo_bloco_texto, (600+150-(proximo_bloco_texto.get_width()/2),325))
         tela.blit(texto_maior_pontuacao, (0,0))
-        tela.blit(texto_pontuacao,(900-texto_pontuacao.get_width()-30,680))
+
+        if texto_pontuacao.get_width() == nivel.get_width():
+            tela.blit(texto_pontuacao,(900-texto_pontuacao.get_width()-30,680-30))
+            tela.blit(nivel, (900-texto_pontuacao.get_width()-30, 680))
+
+        elif texto_pontuacao.get_width() >= nivel.get_width():
+            tela.blit(texto_pontuacao,(870-texto_pontuacao.get_width(),650))
+            tela.blit(nivel, (870-texto_pontuacao.get_width()+((texto_pontuacao.get_width()/2)-(nivel.get_width())/2), 680))
+
+        elif texto_pontuacao.get_width() <= nivel.get_width():
+            tela.blit(texto_pontuacao,(870-texto_pontuacao.get_width(),650))
+            tela.blit(nivel, (870-nivel.get_width()+((nivel.get_width()/2)-(texto_pontuacao.get_width())/2), 680))
 
         Desenhando_prox_bloquinho(prox_bloquinho,prox_formato)
         Mapa(tela, TOPO_X, TOPO_Y, LARGURA_GRADE, ALTURA_GRADE)
@@ -456,7 +491,7 @@ def Tela_GO(tela,clock):
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     rodando = False
-                    Menu(tela)
+                    Menu(tela,clock)
 
         tela.fill((0,0,0))
 
