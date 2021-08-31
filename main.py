@@ -9,6 +9,10 @@ LARGURA_GRADE = 300
 ALTURA_GRADE = 600
 TOPO_X = (LARGURA/2)-(LARGURA_GRADE/2)
 TOPO_Y = 50
+RANKING = {
+    "Jogadores": ["Felipe","","","","","","","","",""],
+    "Pontos": [10,0,0,0,0,0,0,0,0,0]
+}
 
 for diretorios,subpastas,arquivos in os.walk("fontes_uuiii"):
     FONTES = arquivos
@@ -49,16 +53,23 @@ def Bloquinhos(x,y):
     lista_de_formatos = random.choice([[formatos1,"1"],[formatos2,"2"],[formatos3,"3"],[formatos4,"4"],[formatos5,"5"],[formatos6,"6"],[formatos7,"7"]])
     return lista_de_formatos[0],lista_de_formatos[1]
 
-def Titulo(fontes,indicacao):
-    frases = ["Tetrinho","Proximo bloco"]
+def Titulo(fontes,indicacao,pontos=None):
+    global RANKING
+    frases = ["Tetrinho","Próximo bloco","Pontuação: {}".format(pontos), "Maior pontuação: {}".format(pontos)]
     cor = (random.randint(0,255), random.randint(0,255), random.randint(0,255))
     fonte = random.choice(fontes)
-    if indicacao == 1:
+    if indicacao == 0:
         titulo = pygame.font.Font("fontes_uuiii/{}".format(fonte), 50)
         titulo2 = titulo.render(frases[0], 1, (cor))
+    elif indicacao == 1:
+        titulo = pygame.font.SysFont("Lucida Console", 30)
+        titulo2 = titulo.render(frases[1], 1, (255,255,255))
     elif indicacao == 2:
-        titulo = pygame.font.Font("fontes_uuiii/{}".format(fonte), 30)
-        titulo2 = titulo.render(frases[1], 1, (cor))
+        titulo = pygame.font.SysFont("Lucida Console", 20)
+        titulo2 = titulo.render(frases[2], 1, (255, 255, 255))
+    elif indicacao == 3:
+        titulo = pygame.font.SysFont("Lucida Console", 20)
+        titulo2 = titulo.render(frases[3], 1, (255, 255, 255))
     return titulo2
 
 def Mapa(tela, x, y, largura, altura):
@@ -194,6 +205,22 @@ def Checar_Movimentos(index,bloquinho,espacinhos,sentido,formato=None,contador=0
                     if passo_falso[index][i2][0] == espacinhos[i][j][0] and passo_falso[index][i2][1] == espacinhos[i][j][1]:
                         return True
 
+def Pontos(espacinhos,pontuacao, multiplicador=0):
+    multiplicador = 0
+    for i in range(1,len(espacinhos)):
+        if len(espacinhos[i]) == 10:
+            multiplicador += 1
+            descida = espacinhos[1:i]
+            descida.insert(0,[])
+            espacinhos.remove(espacinhos[i])
+            espacinhos.insert(1,[])
+            descida = Movimentacao(descida, "baixo")
+            for i in range(len(descida)):
+                espacinhos[i+1] = descida[i]
+
+    pontuacao += 10*multiplicador
+    return espacinhos,pontuacao
+
 def Game_over(espacinhos):
     if espacinhos[1]:
         return True
@@ -208,18 +235,22 @@ def Main(tela):
     global ALTURA_GRADE
     global TOPO_X
     global TOPO_Y
+    global RANKING
 
 
     index = 0
     tamanho = 30
     contador_segundos = 0
     rodando = True
-    titulo = Titulo(FONTES,1)
-    frases = Titulo(FONTES,2)
+    pontuacao = 0
+    titulo = Titulo(FONTES,0)
+    proximo_bloco_texto = Titulo(FONTES,1)
     espacinhos = Vacuos(TOPO_X,TOPO_Y)
     bloquinho,formato = Bloquinhos(TOPO_X+120,TOPO_Y+120)
     prox_bloquinho,prox_formato = Bloquinhos(TOPO_X+120,TOPO_Y+120)
     while rodando:
+        texto_maior_pontuacao = Titulo(FONTES, 3, pontos=RANKING["Pontos"][0])
+        texto_pontuacao = Titulo(FONTES, 2, pontos=pontuacao)
         clock.tick(30)
         for evento in pygame.event.get():
             if evento.type == pygame.QUIT:
@@ -260,7 +291,8 @@ def Main(tela):
                 bloquinho = Movimentacao(bloquinho, "baixo")
             else:
                 for i in range(len(bloquinho[index])):
-                    espacinhos[int((bloquinho[index][i][1]-20)/30)].append((bloquinho[index][i][0],bloquinho[index][i][1],bloquinho[index][i][-1]))
+                    espacinhos[int((bloquinho[index][i][1]-20)/30)].append((int(bloquinho[index][i][0]),int(bloquinho[index][i][1]),bloquinho[index][i][-1]))
+                espacinhos, pontuacao = Pontos(espacinhos, pontuacao)
                 game_over = Game_over(espacinhos)
                 if game_over:
                     rodando = False
@@ -269,8 +301,7 @@ def Main(tela):
                 prox_bloquinho,prox_formato = Bloquinhos(TOPO_X+120,TOPO_Y+120)
                 index = 0
 
-            titulo = Titulo(FONTES,1)
-            frases = Titulo(FONTES,2)
+            titulo = Titulo(FONTES,0)
             contador_segundos = 0
 
         tela.fill((0, 0, 0))
@@ -280,7 +311,9 @@ def Main(tela):
             for j in range(len(espacinhos[i])):
                 pygame.draw.rect(tela,espacinhos[i][j][-1],(espacinhos[i][j][0],espacinhos[i][j][1],tamanho,tamanho))
         tela.blit(titulo, (TOPO_X + (TOPO_X/2)-(titulo.get_width()/2),5))
-        tela.blit(frases, (600+150-(frases.get_width()/2),325))
+        tela.blit(proximo_bloco_texto, (600+150-(proximo_bloco_texto.get_width()/2),325))
+        tela.blit(texto_maior_pontuacao, (0,0))
+        tela.blit(texto_pontuacao,(900-texto_pontuacao.get_width()-30,680))
         Desenhando_prox_bloquinho(prox_bloquinho,prox_formato)
         Mapa(tela, TOPO_X, TOPO_Y, LARGURA_GRADE, ALTURA_GRADE)
         pygame.display.flip()
@@ -318,7 +351,7 @@ def Tela_GO(tela,clock):
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     rodando = False
-                    Main(tela)
+                    Menu(tela)
         tela.fill((0,0,0))
         if 800 - subida > 350 - (texto.get_height()/2):
             subida += 1
@@ -330,7 +363,7 @@ def Tela_GO(tela,clock):
                 cor = (0,0,0)
             else:
                 contador = 0
-            texto2 = fonte2.render("Aperte espaço para jogar novamente", False, cor)
+            texto2 = fonte2.render("Aperte espaço para voltar ao menu", False, cor)
             tela.blit(texto2, (450 - (texto2.get_width() / 2), 900 - subida))
         tela.blit(texto, (450 - (texto.get_width() / 2), 800 - subida))
         pygame.display.flip()
