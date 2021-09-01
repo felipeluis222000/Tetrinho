@@ -1,5 +1,6 @@
 import pygame
 import random
+import time
 import os
 
 # Variaveis Globais
@@ -28,14 +29,13 @@ def Jogador(tela, clock):
     fonte2 = pygame.font.SysFont("Lucida Console", 15)
     texto = ""
     texto2 = "Digite seu nome"
-    texto3 = "Aperte espaço para prosseguir"
+    texto3 = "Aperte espaço para jogar"
     seu_nome = fonte.render(texto2, 1, (255,255,255))
     contador = 0
 
     while rodando:
         clock.tick(80)
 
-        contador += 1
         if contador <= 30:
             cor2 = (255, 255, 255)
 
@@ -78,6 +78,8 @@ def Jogador(tela, clock):
         tela.blit(nome, (450-(nome.get_width()/2),350-(nome.get_height()/2)))
         pygame.display.flip()
 
+        contador += 1
+
 def Bloquinhos(x,y):
     formatos1 = [[(x,y-90,(0,0,205)),(x+30,y-90,(0,0,205)),(x,y-120,(0,0,205)),(x+30,y-120,(0,0,205))]]
 
@@ -108,14 +110,14 @@ def Bloquinhos(x,y):
     lista_de_formatos = random.choice([[formatos1,"1"],[formatos2,"2"],[formatos3,"3"],[formatos4,"4"],[formatos5,"5"],[formatos6,"6"],[formatos7,"7"]])
     return lista_de_formatos[0],lista_de_formatos[1]
 
-def Titulo(fontes,indicacao,pontos=None, jogador=None, lv=None):
+def Titulo(fontes,indicacao,pontos=None, jogador=None, lv=None, tamanho=50):
     global RANKING
     frases = ["Tetrinho","Próximo bloco","{}: {}".format(jogador,pontos), "Maior pontuação: {}".format(pontos), "Nível: {}".format(lv)]
     cor = (random.randint(0,255), random.randint(0,255), random.randint(0,255))
     fonte = random.choice(fontes)
 
     if indicacao == 0:
-        titulo = pygame.font.Font("fontes_uuiii/{}".format(fonte), 50)
+        titulo = pygame.font.Font("fontes_uuiii/{}".format(fonte), tamanho)
         titulo2 = titulo.render(frases[0], 1, (cor))
 
     elif indicacao == 1:
@@ -304,7 +306,7 @@ def Pontos(espacinhos,pontuacao, lv):
     pontuacao += 10*multiplicador
     return espacinhos,pontuacao
 
-def Game_over(espacinhos,jogador,pontuacao):
+def Game_Over(espacinhos,jogador,pontuacao):
     global RANKING
     if espacinhos[1]:
         for i in range(len(RANKING["Pontos"])):
@@ -409,12 +411,15 @@ def Main(tela,clock, nome_jogador):
 
             else:
                 for i in range(len(bloquinho[index])):
+
                     espacinhos[int((bloquinho[index][i][1]-20)/30)].append((int(bloquinho[index][i][0]),int(bloquinho[index][i][1]),bloquinho[index][i][-1]))
                 espacinhos, pontuacao = Pontos(espacinhos, pontuacao, lv)
-                game_over = Game_over(espacinhos,nome_jogador,pontuacao)
+                game_over = Game_Over(espacinhos,nome_jogador,pontuacao)
+
                 if game_over:
                     rodando = False
                     Tela_GO(tela,clock)
+
                 bloquinho,formato = prox_bloquinho,prox_formato
                 prox_bloquinho,prox_formato = Bloquinhos(TOPO_X+120,TOPO_Y+120)
                 index = 0
@@ -454,23 +459,103 @@ def Main(tela,clock, nome_jogador):
 
 def Menu(tela,clock):
     rodando = True
-    inicair = pygame.font.SysFont("cambria", 60)
-    texto = inicair.render("Aperte espaço para iniciar", 1, (255,255,255))
+    contador = 0
+    contador2 = 0
+    contador3 = 0
+    marcador = 0
+    escolha = "Aperte espaço para prosseguir"
+    jogar = "Jogar"
+    ranking = "Ranking"
 
+    fonte = pygame.font.SysFont("Lucida Console", 15)
+    fonte2 = pygame.font.Font("fontes_uuiii/Tetris.ttf", 50)
+    tetrinho = Titulo(FONTES, 0, tamanho=150)
+
+    iniciar_jogo = fonte2.render(jogar, 1, (255,255,255))
+    iniciar_ranking = fonte2.render(ranking, 1, (255,255,255))
     while rodando:
-        clock.tick(60)
+        clock.tick(80)
+        if contador == 80:
+            tetrinho = Titulo(FONTES,0, tamanho=150)
+            contador = 0
+
         for evento in pygame.event.get():
             if evento.type == pygame.QUIT:
                 rodando = False
 
-            if evento.type == pygame.KEYDOWN:
-                if evento.key == pygame.K_SPACE:
-                    Jogador(tela,clock)
-                    rodando = False
+            elif evento.type == pygame.KEYDOWN:
+                if evento.key == pygame.K_s:
+                    if marcador < 1:
+                        marcador += 1
+                    else:
+                        marcador = 0
+
+                elif evento.key == pygame.K_w:
+                    if marcador > 0:
+                        marcador -= 1
+                    else:
+                        marcador = 1
+
+                elif evento.key == pygame.K_SPACE:
+                    if marcador == 0:
+                        Jogador(tela,clock)
+                        rodando = False
+                    elif marcador == 1:
+                        Tela_Ranking(tela,clock)
+                        rodando = False
+
+        if contador2 <= 30:
+            cor = (255, 255, 255)
+
+        elif contador2 >= 30 and contador <= 60:
+            cor = (0, 0, 0)
+
+        else:
+            contador2 = 0
+
+        escolher = fonte.render(escolha, 1, cor)
 
         tela.fill((0,0,0))
-        tela.blit(texto, ((LARGURA/2)-(texto.get_width()/2), (ALTURA/2)-(texto.get_height()/2)))
+        tela.blit(escolher, (900 - escolher.get_width(), 700 - escolher.get_height()))
+        tela.blit(tetrinho, (450-(tetrinho.get_width()/2),150-(tetrinho.get_height()/2)))
+        tela.blit(iniciar_jogo, ((450-(iniciar_jogo.get_width()/2),400-(iniciar_jogo.get_height()/2))))
+        tela.blit(iniciar_ranking, ((450-(iniciar_ranking.get_width()/2),500-(iniciar_ranking.get_height()/2))))
+        if marcador == 0:
+            x = iniciar_jogo.get_width() / 2
+            y = iniciar_jogo.get_height() / 2
+
+            if contador3 <= 30:
+                pygame.draw.polygon(tela,(255,255,255),((400-x,410-y),(400-x,410),(430-x,(820-y)/2)),0)
+
+            elif contador3 >= 30 and contador <= 60:
+                pygame.draw.polygon(tela,(255,255,255),((380-x,410-y),(380-x,410),(410-x,(820-y)/2)),0)
+
+            else:
+                contador3 = 0
+
+            pygame.draw.rect(tela,(255,255,255),(440-(iniciar_jogo.get_width()/2),390-(iniciar_jogo.get_height()/2),iniciar_jogo.get_width()+20,iniciar_jogo.get_height()+20),5)
+
+
+        elif marcador == 1:
+            x = iniciar_ranking.get_width()/2
+            y = iniciar_ranking.get_height()/2
+            if contador3 <= 30:
+                pygame.draw.polygon(tela,(255,255,255),((400-x,510-y),(400-x,510),(430-x,(1020-y)/2)),0)
+
+            elif contador3 >= 30 and contador3 <= 60:
+                pygame.draw.polygon(tela,(255,255,255),((380-x,510-y),(380-x,510),(410-x,(1020-y)/2)),0)
+
+            else:
+                contador3 = 0
+
+            pygame.draw.rect(tela,(255,255,255),(440-(iniciar_ranking.get_width()/2),490-(iniciar_ranking.get_height()/2),iniciar_ranking.get_width()+20,iniciar_ranking.get_height()+20),5)
+
+
         pygame.display.flip()
+
+        contador += 1
+        contador2 += 1
+        contador3 += 1
 
 def Tela_GO(tela,clock):
     rodando = True
@@ -513,6 +598,100 @@ def Tela_GO(tela,clock):
             tela.blit(texto2, (450 - (texto2.get_width() / 2), 900 - subida))
 
         tela.blit(texto, (450 - (texto.get_width() / 2), 800 - subida))
+        pygame.display.flip()
+
+def Tela_Ranking(tela,clock):
+    global RANKING
+
+    rodando = True
+    tela.fill((0,0,0))
+    pygame.display.flip()
+    contador = 0
+    fonte = pygame.font.Font("fontes_uuiii/Tetris.ttf", 30)
+    pontos = fonte.render(str(RANKING["Pontos"][0])+" PTS", 1, (255,255,255))
+    marcador_pontos = pontos.get_width()
+
+    while rodando:
+
+        clock.tick(80)
+
+        for evento in pygame.event.get():
+            if evento.type == pygame.QUIT:
+                rodando = False
+
+            elif evento.type == pygame.KEYDOWN:
+                if evento.key:
+                    Menu(tela,clock)
+                    rodando = False
+
+
+        if contador == 0:
+            for i in range(2000):
+
+                if i <= 700:
+                    pygame.draw.line(tela, (168, 168, 168), (0, 0), (0, i), 10)
+
+                if i >= 860-marcador_pontos and i <= 1560-marcador_pontos:
+                    pygame.draw.line(tela, (168, 168, 168), (860-marcador_pontos, 0), ((860-marcador_pontos), i-(860-marcador_pontos)), 10)
+
+                if i >= 900 and i <= 1600:
+                    pygame.draw.line(tela, (168, 168, 168), (900, 0), (900, i-900), 14)
+
+                if i <= 900:
+                    pygame.draw.line(tela, (168, 168, 168), (0, 0), (i, 0), 10)
+
+                if i >= 70 and i <= 1000:
+                    pygame.draw.line(tela, (168, 168, 168), (0, 70), (i - 100, 70), 10)
+
+                if i >= 140 and i <= 1140:
+                    pygame.draw.line(tela, (168, 168, 168), (0, 140), (i - 140, 140), 10)
+
+                if i >= 210 and i <= 1210:
+                    pygame.draw.line(tela, (168, 168, 168), (0, 210), (i - 210, 210), 10)
+
+                if i >= 280 and i <= 1280:
+                    pygame.draw.line(tela, (168, 168, 168), (0, 280), (i - 280, 280), 10)
+
+                if i >= 350 and i <= 1350:
+                    pygame.draw.line(tela, (168, 168, 168), (0, 350), (i - 350, 350), 10)
+
+                if i >= 420 and i <= 1420:
+                    pygame.draw.line(tela, (168, 168, 168), (0, 420), (i - 420, 420), 10)
+
+                if i >= 490 and i <= 1490:
+                    pygame.draw.line(tela, (168, 168, 168), (0, 490), (i - 490, 490), 10)
+
+                if i >= 560 and i <= 1560:
+                    pygame.draw.line(tela, (168, 168, 168), (0, 560), (i - 560, 560), 10)
+
+                if i >= 630 and i <= 1630:
+                    pygame.draw.line(tela, (168, 168, 168), (0, 630), (i - 630, 630), 10)
+
+                if i >= 700 and i <= 1700:
+                    pygame.draw.line(tela, (168, 168, 168), (0, 700), (i - 700, 700), 14)
+
+                pygame.display.flip()
+
+        if contador < 10:
+
+            texto = ""
+            for i in RANKING["Jogadores"][contador]:
+                texto += i
+                record = fonte.render(texto, 1, (255, 255, 255))
+                tela.blit(record,(10,(70/2)-(record.get_height()/2)+70*contador))
+                pygame.display.flip()
+                time.sleep(0.02)
+
+            texto = ""
+            tamanho_pontos = fonte.render(str(RANKING["Pontos"][contador])+" PTS", 1, (255,255,255))
+            for i in str(RANKING["Pontos"][contador])+" PTS":
+                texto += i
+                pontos = fonte.render(texto, 1, (255, 255, 255))
+                tela.blit(pontos, (880-tamanho_pontos.get_width(),(70/2)-(pontos.get_height()/2)+70*contador))
+                pygame.display.flip()
+                time.sleep(0.02)
+            contador += 1
+
         pygame.display.flip()
 
 Menu(tela,clock)
