@@ -502,17 +502,14 @@ def Main(tela,clock, nome_jogador):
                         DIO = ""
                         pause = False
 
-            if len(DIO) > 10:
-                DIO = ""
 
-            else:
-                if DIO == "wwssadadab":
-                    pygame.mixer.music.pause()
-                    Barulho("ZA WARUDO_160k .wav",0.5)
-                    time.sleep(2)
-                    pygame.mixer.music.unload()
-                    Dio(tela,clock)
-                    rodando = False
+            if DIO == "wwssadadab":
+                pygame.mixer.music.pause()
+                Barulho("ZA WARUDO_160k .wav",0.5)
+                time.sleep(2)
+                pygame.mixer.music.unload()
+                Dio(tela,clock)
+                rodando = False
 
             fonte = pygame.font.Font("fontes_uuiii/Tetris.ttf", 60)
             pause_texto = fonte.render("PAUSE", 1, (255,255,255))
@@ -630,13 +627,12 @@ def Menu(tela,clock):
         contador3 += 1
 
 def Tela_GO(tela,clock):
-    global volume
     rodando = True
     subida = 0
     contador = 0
 
     musica = pygame.mixer.music.load("sons/Game Over - Super Mario World Remix_160k.mp3")
-    pygame.mixer.music.set_volume(volume)
+    pygame.mixer.music.set_volume(0.5)
 
     fonte = pygame.font.SysFont("Lucida Console",60)
     texto = fonte.render("Game Over",False,(255,255,255))
