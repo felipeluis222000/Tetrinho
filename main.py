@@ -10,6 +10,7 @@ LARGURA_GRADE = 300
 ALTURA_GRADE = 600
 TOPO_X = (LARGURA/2)-(LARGURA_GRADE/2)
 TOPO_Y = 50
+volume = 0.1
 RANKING = {
     "Jogadores": ["Felipe","Klara","Jorge","Cauã","Augusto","Thiago","Mateus","Josefa","Ingridi","Julia"],
     "Pontos": [100,90,80,70,60,50,40,30,20,10]
@@ -19,9 +20,15 @@ for diretorios,subpastas,arquivos in os.walk("fontes_uuiii"):
     FONTES = arquivos
 
 pygame.font.init()
+pygame.mixer.init()
 clock = pygame.time.Clock()
 tela = pygame.display.set_mode((LARGURA, ALTURA))
 pygame.display.set_caption("Tetrinho")
+
+def Barulho(arquivo,volume):
+    barulho = pygame.mixer.Sound("sons/{}".format(arquivo))
+    barulho.set_volume(volume)
+    barulho.play()
 
 def Jogador(tela, clock):
     rodando = True
@@ -62,14 +69,19 @@ def Jogador(tela, clock):
             elif evento.type == pygame.KEYDOWN:
                 if evento.key != pygame.K_BACKSPACE and evento.key != pygame.K_SPACE:
                     if len(texto) <= 9:
+                        Barulho("smw_shell_ricochet.wav",0.3)
                         texto += evento.unicode
+                    else:
+                        Barulho("smw_yellow_yoshi_stomp.wav",0.5)
 
                 elif evento.key == pygame.K_BACKSPACE:
                     texto = texto[:-1]
 
                 elif evento.key == pygame.K_SPACE:
-                    rodando = False
+                    Barulho("fall.wav",0.3)
                     Main(tela,clock,texto)
+                    rodando = False
+
 
         tela.fill((0,0,0))
         pygame.draw.rect(tela, cor, (445-(nome.get_width()/2),345-(nome.get_height()/2),nome.get_width()+10,nome.get_height()+5),1)
@@ -302,6 +314,7 @@ def Pontos(espacinhos,pontuacao, lv):
             descida = Movimentacao(descida, "baixo")
             for i in range(len(descida)):
                 espacinhos[i+1] = descida[i]
+            Barulho("clear.wav",0.3)
 
     pontuacao += 10*multiplicador
     return espacinhos,pontuacao
@@ -331,6 +344,7 @@ def Main(tela,clock, nome_jogador):
     global TOPO_X
     global TOPO_Y
     global RANKING
+    global volume
 
 
     index = 0
@@ -342,6 +356,9 @@ def Main(tela,clock, nome_jogador):
     lv = 1
     velocidade = 40
 
+    musica = pygame.mixer.music.load("sons/Techno - Tetris (Remix)_160k.mp3")
+    pygame.mixer.music.set_volume(volume)
+    pygame.mixer.music.play(-1)
     titulo = Titulo(FONTES,0)
     proximo_bloco_texto = Titulo(FONTES,1)
     espacinhos = Vacuos(TOPO_X,TOPO_Y)
@@ -352,6 +369,7 @@ def Main(tela,clock, nome_jogador):
         clock.tick(60)
 
         if pontuacao >= base:
+            Barulho("success.wav",0.3)
             lv += 1
             base = base*lv
             if velocidade-10 >= 1:
@@ -417,9 +435,12 @@ def Main(tela,clock, nome_jogador):
                 game_over = Game_Over(espacinhos,nome_jogador,pontuacao)
 
                 if game_over:
-                    rodando = False
+                    pygame.mixer.music.pause()
+                    pygame.mixer.music.unload()
+                    Barulho("gameover.wav",0.3)
                     Tela_GO(tela,clock)
-
+                    rodando = False
+                Barulho("fall.wav",0.3)
                 bloquinho,formato = prox_bloquinho,prox_formato
                 prox_bloquinho,prox_formato = Bloquinhos(TOPO_X+120,TOPO_Y+120)
                 index = 0
@@ -485,18 +506,21 @@ def Menu(tela,clock):
 
             elif evento.type == pygame.KEYDOWN:
                 if evento.key == pygame.K_s:
+                    Barulho("selection.wav", 0.3)
                     if marcador < 1:
                         marcador += 1
                     else:
                         marcador = 0
 
                 elif evento.key == pygame.K_w:
+                    Barulho("selection.wav", 0.3)
                     if marcador > 0:
                         marcador -= 1
                     else:
                         marcador = 1
 
                 elif evento.key == pygame.K_SPACE:
+                    Barulho("fall.wav",0.3)
                     if marcador == 0:
                         Jogador(tela,clock)
                         rodando = False
@@ -602,11 +626,15 @@ def Tela_GO(tela,clock):
 
 def Tela_Ranking(tela,clock):
     global RANKING
+    global volume
 
     rodando = True
     tela.fill((0,0,0))
     pygame.display.flip()
     contador = 0
+    musica = pygame.mixer.music.load("sons/Cowboy Bebop OST 3 Blue - Blue_70k.mp3")
+    pygame.mixer.music.set_volume(volume)
+    pygame.mixer.music.play(-1)
     fonte = pygame.font.Font("fontes_uuiii/Tetris.ttf", 30)
     pontos = fonte.render(str(RANKING["Pontos"][0])+" PTS", 1, (255,255,255))
     marcador_pontos = pontos.get_width()
@@ -621,6 +649,9 @@ def Tela_Ranking(tela,clock):
 
             elif evento.type == pygame.KEYDOWN:
                 if evento.key:
+                    pygame.mixer.music.pause()
+                    pygame.mixer.music.unload()
+                    Barulho("fall.wav", 0.3)
                     Menu(tela,clock)
                     rodando = False
 
