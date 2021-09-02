@@ -67,7 +67,7 @@ def Jogador(tela, clock):
                 rodando = False
 
             elif evento.type == pygame.KEYDOWN:
-                if evento.key != pygame.K_BACKSPACE and evento.key != pygame.K_SPACE:
+                if evento.key != pygame.K_BACKSPACE and evento.key != pygame.K_SPACE and evento.key != pygame.K_ESCAPE:
                     if len(texto) <= 9:
                         Barulho("smw_shell_ricochet.wav",0.5)
                         texto += evento.unicode
@@ -78,8 +78,15 @@ def Jogador(tela, clock):
                     texto = texto[:-1]
 
                 elif evento.key == pygame.K_SPACE:
+                    pygame.mixer.music.pause()
+                    pygame.mixer.music.unload()
                     Barulho("fall.wav",0.3)
                     Main(tela,clock,texto)
+                    rodando = False
+
+                elif evento.key == pygame.K_ESCAPE:
+                    Barulho("fall.wav",0.3)
+                    Menu(tela,clock)
                     rodando = False
 
 
@@ -529,8 +536,6 @@ def Menu(tela,clock):
                 elif evento.key == pygame.K_SPACE:
                     Barulho("fall.wav",0.3)
                     if marcador == 0:
-                        pygame.mixer.music.pause()
-                        pygame.mixer.music.unload()
                         Jogador(tela,clock)
                         rodando = False
                     elif marcador == 1:
