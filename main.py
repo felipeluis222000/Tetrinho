@@ -1,3 +1,4 @@
+# Feito po Luis Felipe da Silva Santiago e Klara Rodrigues Rocha da Silva
 import pygame
 import random
 import time
