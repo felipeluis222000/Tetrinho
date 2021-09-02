@@ -363,6 +363,7 @@ def Main(tela,clock, nome_jogador):
     base = 50
     lv = 1
     velocidade = 40
+    DIO = ""
 
     musica = pygame.mixer.music.load("sons/Techno - Tetris (Remix)_160k.mp3")
     pygame.mixer.music.set_volume(volume)
@@ -496,8 +497,22 @@ def Main(tela,clock, nome_jogador):
                     rodando = False
 
                 elif evento.type == pygame.KEYDOWN:
+                    DIO += evento.unicode
                     if evento.key == pygame.K_ESCAPE:
                         pause = False
+
+            print(DIO)
+            if len(DIO) > 10:
+                DIO = ""
+
+            else:
+                if DIO == "wwssadadab":
+                    pygame.mixer.music.pause()
+                    Barulho("ZA WARUDO_160k .wav",0.5)
+                    time.sleep(2)
+                    pygame.mixer.music.unload()
+                    Dio(tela,clock)
+                    rodando = False
 
             fonte = pygame.font.Font("fontes_uuiii/Tetris.ttf", 60)
             pause_texto = fonte.render("PAUSE", 1, (255,255,255))
@@ -520,7 +535,7 @@ def Menu(tela,clock):
     fonte2 = pygame.font.Font("fontes_uuiii/Tetris.ttf", 50)
     tetrinho = Titulo(FONTES, 0, tamanho=150)
 
-    if not pygame.mixer.get_busy():
+    if not pygame.mixer.music.get_busy():
         musica = pygame.mixer.music.load("sons/Tetris Theme Slowed Down _160k.mp3")
         pygame.mixer.music.set_volume(volume)
         pygame.mixer.music.play(-1)
@@ -761,5 +776,75 @@ def Tela_Ranking(tela,clock):
             contador += 1
 
         pygame.display.flip()
+
+def Dio(tela,clock):
+    global volume
+
+    rodando = True
+    DIO = ["dio1","dio2","dio3","dio4","dio5"]
+    fonte = pygame.font.SysFont("Lucida Console",20)
+    fala = fonte.render("VOCÊ ACHOU QUE IA GANHAR PONTOS EXTRAS",1,(255,255,255))
+    fala2 = fonte.render("MAS ERA EU DIOOOOOOOOO!!!!!!",1,(255,255,255))
+    dio = pygame.image.load("sprites_dio/dio1.jpeg")
+    x=0
+    y= 350-(dio.get_height()/2)
+
+    musica = pygame.mixer.music.load("sons/JJBA - Dark Rebirth (Theme of DIO)_160k.mp3")
+    pygame.mixer.music.set_volume(volume)
+    pygame.mixer.music.play()
+
+    contador = 0
+    contador2 = 0
+    contador_game_over = 0
+    index = 0
+
+    for i in range(900):
+        pygame.draw.rect(tela,(0,0,0),(0,0,i,i),0)
+        pygame.display.flip()
+        time.sleep(0.001)
+
+    while rodando:
+        clock.tick(60)
+
+        for evento in pygame.event.get():
+            if evento.type == pygame.QUIT:
+                rodando = False
+
+            elif evento.type == pygame.KEYDOWN:
+                if evento.key == pygame.K_ESCAPE:
+                    pygame.mixer.music.pause()
+                    pygame.mixer.music.unload()
+                    Tela_GO(tela,clock)
+                    rodando = False
+
+        if x <= 450 - (dio.get_height()/2):
+            if contador == 2:
+                x += 5
+                contador = 0
+                contador2 += 1
+                tela.fill((0, 0, 0))
+                if contador2 == 5:
+                    if index < 3:
+                        index += 1
+                    else:
+                        index = 0
+                    contador2 = 0
+        else:
+            index = 4
+            pygame.draw.rect(tela,(255,255,255),(150,100,530,100),3)
+            tela.blit(fala,(180,110))
+            tela.blit(fala2, (180+((fala.get_width()-fala2.get_width())/2), 150))
+            contador_game_over += 1
+
+        if not pygame.mixer.music.get_busy():
+            Tela_GO(tela,clock)
+            rodando = False
+
+        dio = pygame.image.load("sprites_dio/{}.jpeg".format(DIO[index]))
+
+        tela.blit(dio,(x,y))
+        pygame.display.flip()
+
+        contador += 1
 
 Menu(tela,clock)
