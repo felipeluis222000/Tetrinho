@@ -1,4 +1,4 @@
-# Feito po Luis Felipe da Silva Santiago e Klara Rodrigues Rocha da Silva
+# Feito po Luis Felipe da Silva Santiago e Klara Rodrigues da Rocha
 import pygame
 import random
 import time
