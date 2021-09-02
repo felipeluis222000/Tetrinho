@@ -499,9 +499,9 @@ def Main(tela,clock, nome_jogador):
                 elif evento.type == pygame.KEYDOWN:
                     DIO += evento.unicode
                     if evento.key == pygame.K_ESCAPE:
+                        DIO = ""
                         pause = False
 
-            print(DIO)
             if len(DIO) > 10:
                 DIO = ""
 
@@ -778,7 +778,6 @@ def Tela_Ranking(tela,clock):
         pygame.display.flip()
 
 def Dio(tela,clock):
-    global volume
 
     rodando = True
     DIO = ["dio1","dio2","dio3","dio4","dio5"]
@@ -790,7 +789,7 @@ def Dio(tela,clock):
     y= 350-(dio.get_height()/2)
 
     musica = pygame.mixer.music.load("sons/JJBA - Dark Rebirth (Theme of DIO)_160k.mp3")
-    pygame.mixer.music.set_volume(volume)
+    pygame.mixer.music.set_volume(1)
     pygame.mixer.music.play()
 
     contador = 0
