@@ -479,6 +479,8 @@ def Main(tela,clock, nome_jogador):
         contador_segundos = contador_segundos + 1
 
 def Menu(tela,clock):
+    global volume
+
     rodando = True
     contador = 0
     contador2 = 0
@@ -491,6 +493,11 @@ def Menu(tela,clock):
     fonte = pygame.font.SysFont("Lucida Console", 15)
     fonte2 = pygame.font.Font("fontes_uuiii/Tetris.ttf", 50)
     tetrinho = Titulo(FONTES, 0, tamanho=150)
+
+    if not pygame.mixer.get_busy():
+        musica = pygame.mixer.music.load("sons/Tetris Theme Slowed Down _160k.mp3")
+        pygame.mixer.music.set_volume(volume)
+        pygame.mixer.music.play(-1)
 
     iniciar_jogo = fonte2.render(jogar, 1, (255,255,255))
     iniciar_ranking = fonte2.render(ranking, 1, (255,255,255))
@@ -522,6 +529,8 @@ def Menu(tela,clock):
                 elif evento.key == pygame.K_SPACE:
                     Barulho("fall.wav",0.3)
                     if marcador == 0:
+                        pygame.mixer.music.pause()
+                        pygame.mixer.music.unload()
                         Jogador(tela,clock)
                         rodando = False
                     elif marcador == 1:
@@ -635,15 +644,12 @@ def Tela_GO(tela,clock):
 
 def Tela_Ranking(tela,clock):
     global RANKING
-    global volume
 
     rodando = True
     tela.fill((0,255,255))
     pygame.display.flip()
     contador = 0
-    musica = pygame.mixer.music.load("sons/Cowboy Bebop OST 3 Blue - Blue_70k.mp3")
-    pygame.mixer.music.set_volume(volume)
-    pygame.mixer.music.play(-1)
+
     fonte = pygame.font.Font("fontes_uuiii/Tetris.ttf", 30)
     pontos = fonte.render(str(RANKING["Pontos"][0])+" PTS", 1, (0,0,0))
     marcador_pontos = pontos.get_width()
@@ -658,8 +664,6 @@ def Tela_Ranking(tela,clock):
 
             elif evento.type == pygame.KEYDOWN:
                 if evento.key:
-                    pygame.mixer.music.pause()
-                    pygame.mixer.music.unload()
                     Barulho("fall.wav", 0.3)
                     Menu(tela,clock)
                     rodando = False
