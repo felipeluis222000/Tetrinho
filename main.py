@@ -358,6 +358,7 @@ def Main(tela,clock, nome_jogador):
     tamanho = 30
     contador_segundos = 0
     rodando = True
+    pause = False
     pontuacao = 0
     base = 50
     lv = 1
@@ -366,6 +367,7 @@ def Main(tela,clock, nome_jogador):
     musica = pygame.mixer.music.load("sons/Techno - Tetris (Remix)_160k.mp3")
     pygame.mixer.music.set_volume(volume)
     pygame.mixer.music.play(-1)
+
     titulo = Titulo(FONTES,0)
     proximo_bloco_texto = Titulo(FONTES,1)
     espacinhos = Vacuos(TOPO_X,TOPO_Y)
@@ -373,117 +375,135 @@ def Main(tela,clock, nome_jogador):
     prox_bloquinho,prox_formato = Bloquinhos(TOPO_X+120,TOPO_Y+120)
 
     while rodando:
-        clock.tick(60)
+        if not pause:
+            clock.tick(60)
 
-        if pontuacao >= base:
-            Barulho("success.wav",0.3)
-            lv += 1
-            base = base*lv
-            if velocidade-10 >= 1:
-                velocidade -= 10
-            else:
-                velocidade = 1
+            if pontuacao >= base:
+                Barulho("success.wav",0.3)
+                lv += 1
+                base = base*lv
+                if velocidade-10 >= 1:
+                    velocidade -= 10
+                else:
+                    velocidade = 1
 
-        if RANKING["Pontos"][0] >= pontuacao:
-            texto_maior_pontuacao = Titulo(FONTES, 3, pontos=RANKING["Pontos"][0])
-
-        else:
-            texto_maior_pontuacao = Titulo(FONTES, 3, pontos=pontuacao)
-
-        texto_pontuacao = Titulo(FONTES, 2, pontos=pontuacao, jogador=nome_jogador)
-        nivel = Titulo(FONTES,4,lv=lv)
-
-        for evento in pygame.event.get():
-            if evento.type == pygame.QUIT:
-                rodando = False
-
-            if evento.type == pygame.KEYDOWN:
-                if evento.key == pygame.K_s:
-                    trava = Checar_Movimentos(index, bloquinho, espacinhos, "baixo")
-                    if not trava:
-                        bloquinho = Movimentacao(bloquinho, "baixo")
-
-                elif evento.key == pygame.K_d:
-                    trava = Checar_Movimentos(index, bloquinho, espacinhos, "direita")
-                    if not trava:
-                        bloquinho = Movimentacao(bloquinho, "direita")
-
-                elif evento.key == pygame.K_a:
-                    trava = Checar_Movimentos(index,bloquinho,espacinhos,"esquerda")
-                    if not trava:
-                        bloquinho = Movimentacao(bloquinho, "esquerda")
-
-                elif evento.key == pygame.K_SPACE:
-                    bloquinho2 = bloquinho
-                    if index + 1 < len(bloquinho):
-                        index += 1
-                        bloquinho,trava = Checar_Movimentos(index,bloquinho,espacinhos,"espaco",formato=formato)
-                        if trava:
-                            bloquinho = bloquinho2
-                            index -= 1
-
-                    else:
-                        index = 0
-                        bloquinho,trava = Checar_Movimentos(index,bloquinho,espacinhos,"espaco",formato=formato)
-                        if trava:
-                            bloquinho = bloquinho2
-                            index = len(bloquinho)-1
-
-        if contador_segundos == velocidade:
-            trava = Checar_Movimentos(index, bloquinho, espacinhos, "baixo")
-            if not trava:
-                bloquinho = Movimentacao(bloquinho, "baixo")
+            if RANKING["Pontos"][0] >= pontuacao:
+                texto_maior_pontuacao = Titulo(FONTES, 3, pontos=RANKING["Pontos"][0])
 
             else:
-                for i in range(len(bloquinho[index])):
+                texto_maior_pontuacao = Titulo(FONTES, 3, pontos=pontuacao)
 
-                    espacinhos[int((bloquinho[index][i][1]-20)/30)].append((int(bloquinho[index][i][0]),int(bloquinho[index][i][1]),bloquinho[index][i][-1]))
-                espacinhos, pontuacao = Pontos(espacinhos, pontuacao, lv)
-                game_over = Game_Over(espacinhos,nome_jogador,pontuacao)
+            texto_pontuacao = Titulo(FONTES, 2, pontos=pontuacao, jogador=nome_jogador)
+            nivel = Titulo(FONTES,4,lv=lv)
 
-                if game_over:
-                    pygame.mixer.music.pause()
-                    pygame.mixer.music.unload()
-                    Barulho("gameover.wav",0.3)
-                    Tela_GO(tela,clock)
+            for evento in pygame.event.get():
+                if evento.type == pygame.QUIT:
                     rodando = False
-                Barulho("fall.wav",0.3)
-                bloquinho,formato = prox_bloquinho,prox_formato
-                prox_bloquinho,prox_formato = Bloquinhos(TOPO_X+120,TOPO_Y+120)
-                index = 0
 
-            titulo = Titulo(FONTES,0)
-            contador_segundos = 0
+                if evento.type == pygame.KEYDOWN:
+                    if evento.key == pygame.K_s:
+                        trava = Checar_Movimentos(index, bloquinho, espacinhos, "baixo")
+                        if not trava:
+                            bloquinho = Movimentacao(bloquinho, "baixo")
 
-        tela.fill((0, 0, 0))
-        for i in range(len(bloquinho[index])):
-            pygame.draw.rect(tela, bloquinho[index][i][-1],(bloquinho[index][i][0],bloquinho[index][i][1], tamanho, tamanho),0)
+                    elif evento.key == pygame.K_d:
+                        trava = Checar_Movimentos(index, bloquinho, espacinhos, "direita")
+                        if not trava:
+                            bloquinho = Movimentacao(bloquinho, "direita")
 
-        for i in range(len(espacinhos)):
-            for j in range(len(espacinhos[i])):
-                pygame.draw.rect(tela,espacinhos[i][j][-1],(espacinhos[i][j][0],espacinhos[i][j][1],tamanho,tamanho))
+                    elif evento.key == pygame.K_a:
+                        trava = Checar_Movimentos(index,bloquinho,espacinhos,"esquerda")
+                        if not trava:
+                            bloquinho = Movimentacao(bloquinho, "esquerda")
 
-        tela.blit(titulo, (TOPO_X + (TOPO_X/2)-(titulo.get_width()/2),5))
-        tela.blit(proximo_bloco_texto, (600+150-(proximo_bloco_texto.get_width()/2),325))
-        tela.blit(texto_maior_pontuacao, (0,0))
+                    elif evento.key == pygame.K_SPACE:
+                        bloquinho2 = bloquinho
+                        if index + 1 < len(bloquinho):
+                            index += 1
+                            bloquinho,trava = Checar_Movimentos(index,bloquinho,espacinhos,"espaco",formato=formato)
+                            if trava:
+                                bloquinho = bloquinho2
+                                index -= 1
 
-        if texto_pontuacao.get_width() == nivel.get_width():
-            tela.blit(texto_pontuacao,(900-texto_pontuacao.get_width()-30,680-30))
-            tela.blit(nivel, (900-texto_pontuacao.get_width()-30, 680))
+                        else:
+                            index = 0
+                            bloquinho,trava = Checar_Movimentos(index,bloquinho,espacinhos,"espaco",formato=formato)
+                            if trava:
+                                bloquinho = bloquinho2
+                                index = len(bloquinho)-1
+                    elif evento.type == pygame.KEYDOWN:
+                        if evento.key == pygame.K_ESCAPE:
+                            pause = True
 
-        elif texto_pontuacao.get_width() >= nivel.get_width():
-            tela.blit(texto_pontuacao,(870-texto_pontuacao.get_width(),650))
-            tela.blit(nivel, (870-texto_pontuacao.get_width()+((texto_pontuacao.get_width()/2)-(nivel.get_width())/2), 680))
+            if contador_segundos == velocidade:
+                trava = Checar_Movimentos(index, bloquinho, espacinhos, "baixo")
+                if not trava:
+                    bloquinho = Movimentacao(bloquinho, "baixo")
 
-        elif texto_pontuacao.get_width() <= nivel.get_width():
-            tela.blit(texto_pontuacao,(870-texto_pontuacao.get_width(),650))
-            tela.blit(nivel, (870-nivel.get_width()+((nivel.get_width()/2)-(texto_pontuacao.get_width())/2), 680))
+                else:
+                    for i in range(len(bloquinho[index])):
 
-        Desenhando_prox_bloquinho(prox_bloquinho,prox_formato)
-        Mapa(tela, TOPO_X, TOPO_Y, LARGURA_GRADE, ALTURA_GRADE)
+                        espacinhos[int((bloquinho[index][i][1]-20)/30)].append((int(bloquinho[index][i][0]),int(bloquinho[index][i][1]),bloquinho[index][i][-1]))
+                    espacinhos, pontuacao = Pontos(espacinhos, pontuacao, lv)
+                    game_over = Game_Over(espacinhos,nome_jogador,pontuacao)
 
-        pygame.display.flip()
-        contador_segundos = contador_segundos + 1
+                    if game_over:
+                        pygame.mixer.music.pause()
+                        pygame.mixer.music.unload()
+                        Barulho("gameover.wav",0.3)
+                        Tela_GO(tela,clock)
+                        rodando = False
+                    Barulho("fall.wav",0.3)
+                    bloquinho,formato = prox_bloquinho,prox_formato
+                    prox_bloquinho,prox_formato = Bloquinhos(TOPO_X+120,TOPO_Y+120)
+                    index = 0
+
+                titulo = Titulo(FONTES,0)
+                contador_segundos = 0
+
+            tela.fill((0, 0, 0))
+            for i in range(len(bloquinho[index])):
+                pygame.draw.rect(tela, bloquinho[index][i][-1],(bloquinho[index][i][0],bloquinho[index][i][1], tamanho, tamanho),0)
+
+            for i in range(len(espacinhos)):
+                for j in range(len(espacinhos[i])):
+                    pygame.draw.rect(tela,espacinhos[i][j][-1],(espacinhos[i][j][0],espacinhos[i][j][1],tamanho,tamanho))
+
+            tela.blit(titulo, (TOPO_X + (TOPO_X/2)-(titulo.get_width()/2),5))
+            tela.blit(proximo_bloco_texto, (600+150-(proximo_bloco_texto.get_width()/2),325))
+            tela.blit(texto_maior_pontuacao, (0,0))
+
+            if texto_pontuacao.get_width() == nivel.get_width():
+                tela.blit(texto_pontuacao,(900-texto_pontuacao.get_width()-30,680-30))
+                tela.blit(nivel, (900-texto_pontuacao.get_width()-30, 680))
+
+            elif texto_pontuacao.get_width() >= nivel.get_width():
+                tela.blit(texto_pontuacao,(870-texto_pontuacao.get_width(),650))
+                tela.blit(nivel, (870-texto_pontuacao.get_width()+((texto_pontuacao.get_width()/2)-(nivel.get_width())/2), 680))
+
+            elif texto_pontuacao.get_width() <= nivel.get_width():
+                tela.blit(texto_pontuacao,(870-texto_pontuacao.get_width(),650))
+                tela.blit(nivel, (870-nivel.get_width()+((nivel.get_width()/2)-(texto_pontuacao.get_width())/2), 680))
+
+            Desenhando_prox_bloquinho(prox_bloquinho,prox_formato)
+            Mapa(tela, TOPO_X, TOPO_Y, LARGURA_GRADE, ALTURA_GRADE)
+
+            pygame.display.flip()
+            contador_segundos = contador_segundos + 1
+        if pause:
+            for evento in pygame.event.get():
+                if evento.type == pygame.QUIT:
+                    rodando = False
+
+                elif evento.type == pygame.KEYDOWN:
+                    if evento.key == pygame.K_ESCAPE:
+                        pause = False
+
+            fonte = pygame.font.Font("fontes_uuiii/Tetris.ttf", 200)
+            pause_texto = fonte.render("PAUSE", 1, (255,255,255))
+            tela.blit(pause_texto, (450-(pause_texto.get_width()/2),350-(pause_texto.get_height()/2)))
+            pygame.display.flip()
+
 
 def Menu(tela,clock):
     global volume
