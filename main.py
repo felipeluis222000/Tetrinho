@@ -69,7 +69,7 @@ def Jogador(tela, clock):
             elif evento.type == pygame.KEYDOWN:
                 if evento.key != pygame.K_BACKSPACE and evento.key != pygame.K_SPACE:
                     if len(texto) <= 9:
-                        Barulho("smw_shell_ricochet.wav",0.3)
+                        Barulho("smw_shell_ricochet.wav",0.5)
                         texto += evento.unicode
                     else:
                         Barulho("smw_yellow_yoshi_stomp.wav",0.5)
@@ -582,9 +582,13 @@ def Menu(tela,clock):
         contador3 += 1
 
 def Tela_GO(tela,clock):
+    global volume
     rodando = True
     subida = 0
     contador = 0
+
+    musica = pygame.mixer.music.load("sons/Game Over - Super Mario World Remix_160k.mp3")
+    pygame.mixer.music.set_volume(volume)
 
     fonte = pygame.font.SysFont("Lucida Console",60)
     texto = fonte.render("Game Over",False,(255,255,255))
@@ -599,10 +603,15 @@ def Tela_GO(tela,clock):
 
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
+                    pygame.mixer.music.pause()
+                    pygame.mixer.music.unload()
                     rodando = False
                     Menu(tela,clock)
 
         tela.fill((0,0,0))
+
+        if subida == 200:
+            pygame.mixer.music.play(-1)
 
         if 800 - subida > 350 - (texto.get_height()/2):
             subida += 1
@@ -629,14 +638,14 @@ def Tela_Ranking(tela,clock):
     global volume
 
     rodando = True
-    tela.fill((0,0,0))
+    tela.fill((0,255,255))
     pygame.display.flip()
     contador = 0
     musica = pygame.mixer.music.load("sons/Cowboy Bebop OST 3 Blue - Blue_70k.mp3")
     pygame.mixer.music.set_volume(volume)
     pygame.mixer.music.play(-1)
     fonte = pygame.font.Font("fontes_uuiii/Tetris.ttf", 30)
-    pontos = fonte.render(str(RANKING["Pontos"][0])+" PTS", 1, (255,255,255))
+    pontos = fonte.render(str(RANKING["Pontos"][0])+" PTS", 1, (0,0,0))
     marcador_pontos = pontos.get_width()
 
     while rodando:
@@ -708,7 +717,7 @@ def Tela_Ranking(tela,clock):
             texto = ""
             for i in RANKING["Jogadores"][contador]:
                 texto += i
-                record = fonte.render(texto, 1, (255, 255, 255))
+                record = fonte.render(texto, 1, (0, 0, 0))
                 tela.blit(record,(10,(70/2)-(record.get_height()/2)+70*contador))
                 pygame.display.flip()
                 time.sleep(0.02)
@@ -717,7 +726,7 @@ def Tela_Ranking(tela,clock):
             tamanho_pontos = fonte.render(str(RANKING["Pontos"][contador])+" PTS", 1, (255,255,255))
             for i in str(RANKING["Pontos"][contador])+" PTS":
                 texto += i
-                pontos = fonte.render(texto, 1, (255, 255, 255))
+                pontos = fonte.render(texto, 1, (0, 0, 0))
                 tela.blit(pontos, (880-tamanho_pontos.get_width(),(70/2)-(pontos.get_height()/2)+70*contador))
                 pygame.display.flip()
                 time.sleep(0.02)
