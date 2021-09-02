@@ -501,9 +501,9 @@ def Main(tela,clock, nome_jogador):
 
             fonte = pygame.font.Font("fontes_uuiii/Tetris.ttf", 200)
             pause_texto = fonte.render("PAUSE", 1, (255,255,255))
+            tela.fill((0,0,0))
             tela.blit(pause_texto, (450-(pause_texto.get_width()/2),350-(pause_texto.get_height()/2)))
             pygame.display.flip()
-
 
 def Menu(tela,clock):
     global volume
@@ -688,7 +688,7 @@ def Tela_Ranking(tela,clock):
                 rodando = False
 
             elif evento.type == pygame.KEYDOWN:
-                if evento.key:
+                if evento.key == pygame.K_ESCAPE:
                     Barulho("fall.wav", 0.3)
                     Menu(tela,clock)
                     rodando = False
