@@ -12,8 +12,8 @@ TOPO_X = (LARGURA/2)-(LARGURA_GRADE/2)
 TOPO_Y = 50
 volume = 0.1
 RANKING = {
-    "Jogadores": ["Felipe","Klara","Jorge","Cauã","Augusto","Thiago","Mateus","Josefa","Ingridi","Julia"],
-    "Pontos": [100,90,80,70,60,50,40,30,20,10]
+    "Jogadores": [],
+    "Pontos": []
 }
 
 for diretorios,subpastas,arquivos in os.walk("fontes_uuiii"):
@@ -24,6 +24,26 @@ pygame.mixer.init()
 clock = pygame.time.Clock()
 tela = pygame.display.set_mode((LARGURA, ALTURA))
 pygame.display.set_caption("Tetrinho")
+
+def Salvar():
+    try:
+        with open("ranking.css","w") as db:
+            for i in range(len(RANKING["Jogadores"])):
+                db.write("{},{}\n".format(RANKING["Jogadores"][i],RANKING["Pontos"][i]))
+            db.close()
+    except:
+        exit()
+
+def Load():
+    try:
+        with open("ranking.css","r") as db:
+            for i in db.readlines():
+                j = i.strip().split(",")
+                RANKING["Jogadores"].append(j[0])
+                RANKING["Pontos"].append(int(j[1]))
+            db.close()
+    except:
+        exit()
 
 def Barulho(arquivo,volume):
     barulho = pygame.mixer.Sound("sons/{}".format(arquivo))
@@ -449,6 +469,7 @@ def Main(tela,clock, nome_jogador):
                     game_over = Game_Over(espacinhos,nome_jogador,pontuacao)
 
                     if game_over:
+                        Salvar()
                         pygame.mixer.music.pause()
                         pygame.mixer.music.unload()
                         Barulho("gameover.wav",0.3)
@@ -842,4 +863,5 @@ def Dio(tela,clock):
 
         contador += 1
 
+Load()
 Menu(tela,clock)

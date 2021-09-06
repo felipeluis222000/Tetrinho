@@ -3,3 +3,4 @@ venv
 macetes.txt
 testes.py
 testes2.py
+.gitignore
